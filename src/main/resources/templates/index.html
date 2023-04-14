@@ -1,16 +1,17 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="ru">
 <head>
-    <title>Main page</title>
+    <title>Платформа по созданию резюме</title>
 </head>
 <body>
 
 <div th:replace="~{header}"></div>
 
 
-<main id="main">
-    <h1>Hello!</h1>
-    <h1 th:text="${userName}"></h1>
-    <h1 th:text="${userSurName}"></h1>
+<main id="main" th:object="${session.user}">
+    <h1>Добрый день:</h1>
+    <h1 th:text="*{name}"></h1>
+    <h1 th:text="*{surname}"></h1>
+    <a href="/cv/list/">Показать мои резюме</a>
 </main>
 
 <div th:replace="~{footer}"></div>

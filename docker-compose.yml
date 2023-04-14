@@ -1,0 +1,13 @@
+version: '3.3'
+
+services:
+  mysql-db:
+    image: mysql:latest
+    container_name: cv-platform-db
+    ports:
+      - "3328:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: 1q2w3e4r
+      MYSQL_USER: dev_main
+      MYSQL_PASSWORD: 1q2w3e4r
+      MYSQL_ROOT_HOST: '%'

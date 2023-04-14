@@ -3,6 +3,8 @@
 <body>
 <div th:fragment="header" id="header">
   I'm a header!
+  <span th:object="${session.user}" th:text="*{surname}"></span>
+  <a th:href="@{/logout}">Выйти</a>
 </div>
 </body>
 </html>

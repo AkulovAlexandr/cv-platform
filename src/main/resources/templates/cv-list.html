@@ -1,0 +1,26 @@
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <title>Все созданные вами резюме</title>
+</head>
+<body>
+
+<div th:replace="~{header}"></div>
+
+
+<main>
+    <span th:text="${message}"></span>
+    <h1>Ваши резюме</h1>
+    <table>
+        <tr th:each="resume : ${resumes}">
+            <td th:text="${resume.title}"></td>
+            <td><a th:href="@{/cv/{id}/(id=${resume.id})}">Показать</a></td>
+            <td><a th:href="@{/cv/delete/{id}/(id=${resume.id})}">Удалить</a></td>
+        </tr>
+    </table>
+    <p><a href="/cv/create/">Создать резюме</a></p>
+</main>
+<a th:href="@{/}">Назад</a>
+<div th:replace="~{footer}"></div>
+
+</body>
+</html>

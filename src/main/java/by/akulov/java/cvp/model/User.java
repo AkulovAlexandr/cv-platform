@@ -17,7 +17,8 @@ public class User {
     @Column(unique = true)
     private String login;
     private String password;
-    @ManyToMany
+    private String role;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Resume> resume;
 
     public Long getId() {
@@ -66,6 +67,10 @@ public class User {
 
     public void setResume(Set<Resume> resumes) {
         this.resume = resumes;
+    }
+
+    public void addResume(Resume resume) {
+        this.resume.add(resume);
     }
 
     @Override

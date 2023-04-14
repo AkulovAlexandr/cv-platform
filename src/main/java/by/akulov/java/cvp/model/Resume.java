@@ -22,6 +22,16 @@ public class Resume {
     private String workExperienceInfo;
     @Column(name = "contacts", columnDefinition = "TEXT(100) default NULL")
     private String contacts;
+    @ManyToOne(fetch = FetchType.EAGER)
+    private User user;
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 
     public Long getId() {
         return id;

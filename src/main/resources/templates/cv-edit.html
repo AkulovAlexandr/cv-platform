@@ -1,0 +1,26 @@
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <title>Create CV</title>
+</head>
+<body>
+
+<div th:replace="~{header}"></div>
+
+
+<main>
+    <span th:text="${message}"></span>
+    <form th:action="@{/cv/create/}" th:object="${resume}" method="post">
+        <p>Название: <input type="text" th:field="*{title}" /></p>
+        <p>О себе: <input type="text" th:field="*{commonInfo}" /></p>
+        <p>Образование: <input type="text" th:field="*{educationInfo}" /></p>
+        <p>Опыт работы: <input type="text" th:field="*{workExperienceInfo}" /></p>
+        <p>Контакты: <input type="text" th:field="*{contacts}" /></p>
+        <p><input type="submit" value="Создать" /> <input type="reset" value="Очистить" /></p>
+    </form>
+</main>
+<a th:href="@{/cv/list/}">Назад</a>
+
+<div th:replace="~{footer}"></div>
+
+</body>
+</html>
