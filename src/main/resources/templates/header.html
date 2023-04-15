@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="ru">
 <body>
 <div th:fragment="header" id="header">
-  I'm a header!
+  <p>I'm a header!</p>
   <span th:object="${session.user}" th:text="*{surname}"></span>
   <a th:href="@{/logout}">Выйти</a>
 </div>

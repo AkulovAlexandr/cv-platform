@@ -1,0 +1,17 @@
+#header, #footer {
+    background-color: darkgray;
+    height: 60px;
+    border-radius: 15px;
+    text-align: center;
+}
+
+table {
+    border-collapse: collapse;
+    border: 1px solid silver;
+    background-color: silver;"
+    border-radius: 15px;
+}
+
+td {
+    padding: 10px;
+}

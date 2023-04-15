@@ -1,6 +1,7 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="ru">
 <head>
-    <title>Create CV</title>
+    <title>Редактор резюме</title>
+    <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
 
@@ -18,7 +19,7 @@
         <p><input type="submit" value="Создать" /> <input type="reset" value="Очистить" /></p>
     </form>
 </main>
-<a th:href="@{/cv/list/}">Назад</a>
+<a th:href="@{/cv/list/}">Показать мои резюме</a>
 
 <div th:replace="~{footer}"></div>
 

@@ -1,6 +1,7 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="ru">
 <head>
     <title>Платформа по созданию резюме</title>
+    <link th:href="@{/css/main.css}" rel="stylesheet"/>
 </head>
 <body>
 
@@ -8,10 +9,10 @@
 
 
 <main id="main" th:object="${session.user}">
-    <h1>Добрый день:</h1>
-    <h1 th:text="*{name}"></h1>
-    <h1 th:text="*{surname}"></h1>
-    <a href="/cv/list/">Показать мои резюме</a>
+    <h2>Добрый день:</h2>
+    <span th:text="*{name}"> </span>
+    <span th:text="*{surname}"></span>
+    <h2><a href="/cv/list/">Показать мои резюме</a></h2>
 </main>
 
 <div th:replace="~{footer}"></div>
