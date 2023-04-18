@@ -14,7 +14,7 @@ public interface ResumeRepository extends Repository<Resume, Long> {
 
     Resume save(Resume resume);
 
-    ArrayList<Resume> findAllByUser_id(Long id);
+    ArrayList<Resume> findAllByPlatformUser_id(Long id);
 
     Resume findFirstById(Long id);
 

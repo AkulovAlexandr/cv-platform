@@ -1,18 +1,17 @@
 package by.akulov.java.cvp.repository;
 
 
-import by.akulov.java.cvp.model.Resume;
-import by.akulov.java.cvp.model.User;
+import by.akulov.java.cvp.model.PlatformUser;
 import org.springframework.data.repository.CrudRepository;
 
-import java.util.Set;
+import java.util.Optional;
 
 
-public interface UserRepository extends CrudRepository<User, Long> {
+public interface UserRepository extends CrudRepository<PlatformUser, Long> {
 
-    User findFirstByName(String name);
 
-    User findFirstByLogin(String login);
+    Optional<PlatformUser> findFirstByLogin(String login);
 
-    User findUserById(Long id);
+    PlatformUser findUserById(Long id);
+
 }

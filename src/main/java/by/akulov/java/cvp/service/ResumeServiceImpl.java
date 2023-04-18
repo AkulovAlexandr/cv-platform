@@ -24,7 +24,7 @@ public class ResumeServiceImpl implements ResumeService{
 
     @Override
     public ArrayList<Resume> findAllByUserId(Long id) {
-        return resumeRepository.findAllByUser_id(id);
+        return resumeRepository.findAllByPlatformUser_id(id);
     }
 
     @Override

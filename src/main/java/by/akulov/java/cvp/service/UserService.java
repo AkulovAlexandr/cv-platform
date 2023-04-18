@@ -1,10 +1,12 @@
 package by.akulov.java.cvp.service;
 
-import by.akulov.java.cvp.model.User;
-import org.springframework.data.repository.CrudRepository;
+import by.akulov.java.cvp.model.PlatformUser;
+import org.springframework.security.core.userdetails.UserDetailsService;
 
-public interface UserService {
+public interface UserService extends UserDetailsService {
 
-    User getUserById(Long id);
+    PlatformUser getUserById(Long id);
+
+    PlatformUser findUserByLogin(String login);
 
 }
