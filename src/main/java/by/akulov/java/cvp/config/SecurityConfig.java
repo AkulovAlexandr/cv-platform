@@ -30,9 +30,7 @@ public class SecurityConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        PasswordEncoder encoder = new BCryptPasswordEncoder(12);
-        System.out.println(encoder.encode("user"));
-        return encoder;
+        return new BCryptPasswordEncoder(12);
     }
 
     @Bean
@@ -45,7 +43,7 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**")).permitAll()
-                        .requestMatchers( "/","/cv/","/cv/**").hasRole("USER")
+                        .requestMatchers( "/","/cv/","/cv/**").hasAnyRole("USER", "ADMIN")
                 )
                 .formLogin().permitAll()
                 .and()

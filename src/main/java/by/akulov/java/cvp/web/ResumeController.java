@@ -55,7 +55,7 @@ public class ResumeController {
                 resumeService.deleteResumeById(id);
                 //как вместе с редиректом передать message?
                 model.addAttribute("message", "Резюме удалено!");
-                return "forward:/cv/list/";
+                return "redirect:/cv/list/";
             }
         }
         model.addAttribute("message", "Нет доступа к запрашиваемому резюме!");
