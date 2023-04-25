@@ -1,14 +1,12 @@
 package by.akulov.java.cvp.model;
 
+import by.akulov.java.cvp.model.resume.Resume;
 import jakarta.persistence.*;
 import lombok.Data;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-import java.util.List;
+import java.util.Collection;
 import java.util.Objects;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "users")
@@ -24,8 +22,8 @@ public class PlatformUser {
     private String login;
     private String password;
     private String role;
-    @OneToMany(mappedBy = "platformUser", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private Set<Resume> resume;
+    @OneToMany(mappedBy = "platformUser", cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+    private Collection<Resume> resume;
 
     @Override
     public boolean equals(Object o) {
@@ -42,14 +40,12 @@ public class PlatformUser {
 
     @Override
     public String toString() {
-        return "User{" +
+        return "PlatformUser{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", surname='" + surname + '\'' +
                 ", login='" + login + '\'' +
-                ", password='" + password + '\'' +
                 ", role='" + role + '\'' +
-                ", resume=" + resume +
                 '}';
     }
 }

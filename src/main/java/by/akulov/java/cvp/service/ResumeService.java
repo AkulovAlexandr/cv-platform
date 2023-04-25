@@ -1,10 +1,8 @@
 package by.akulov.java.cvp.service;
 
-import by.akulov.java.cvp.model.Resume;
+import by.akulov.java.cvp.model.resume.Resume;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
 
 public interface ResumeService {
 

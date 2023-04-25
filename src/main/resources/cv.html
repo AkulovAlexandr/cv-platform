@@ -1,0 +1,26 @@
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <title>Ваше резюме</title>
+    <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+
+<div th:replace="~{header}"></div>
+
+
+<main th:object="${resume}">
+ <div id="title"><h1 th:text="*{title}"></h1></div>
+    <h2>О себе:</h2>
+    <div id="commonInfo" th:text="*{commonInfo}"></div>
+    <h2>Образование:</h2>
+    <div id="educationInfo" th:text="*{educationInfo}"></div>
+    <h2>Опыт работы:</h2>
+    <div id="workExperienceInfo" th:text="*{workExperienceInfo}"></div>
+    <h2>Контакты:</h2>
+    <div id="contacts" th:text="*{contacts}"></div>
+</main>
+<a th:href="@{/cv/list/}">Назад</a>
+<div th:replace="~{footer}"></div>
+
+</body>
+</html>

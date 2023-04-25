@@ -1,9 +1,14 @@
-package by.akulov.java.cvp.model;
+package by.akulov.java.cvp.model.resume;
 
+import by.akulov.java.cvp.model.PlatformUser;
+import by.akulov.java.cvp.model.resume.contact.Contact;
+import by.akulov.java.cvp.model.resume.experience.Experience;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.Collection;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "resumes")
@@ -21,9 +26,14 @@ public class Resume {
     private String educationInfo;
     @Column(name = "work_exp", columnDefinition = "TEXT(10000) default NULL")
     private String workExperienceInfo;
-    @Column(name = "contacts", columnDefinition = "TEXT(100) default NULL")
-    private String contacts;
-    @ManyToOne(fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "resume", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    private Collection<Skill> skills;
+    @OneToMany(mappedBy = "resume", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    private Collection<Experience> experiences;
+    @OneToMany(mappedBy = "resume", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    private Collection<Contact> contacts;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
     private PlatformUser platformUser;
 
     @Override
@@ -47,7 +57,9 @@ public class Resume {
                 ", commonInfo='" + commonInfo + '\'' +
                 ", educationInfo='" + educationInfo + '\'' +
                 ", workExperienceInfo='" + workExperienceInfo + '\'' +
-                ", contacts='" + contacts + '\'' +
+                ", skills=" + skills +
+                ", contacts=" + contacts +
+                ", user_id=" + platformUser.getId() +
                 '}';
     }
 }

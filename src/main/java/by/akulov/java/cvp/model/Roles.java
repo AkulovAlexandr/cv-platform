@@ -1,6 +1,6 @@
 package by.akulov.java.cvp.model;
 
-public enum Role {
+public enum Roles {
 
     ROLE_USER, ROLE_ADMIN
 

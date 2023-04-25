@@ -1,7 +1,7 @@
 package by.akulov.java.cvp.web;
 
 import by.akulov.java.cvp.model.PlatformUser;
-import by.akulov.java.cvp.model.Resume;
+import by.akulov.java.cvp.model.resume.Resume;
 import by.akulov.java.cvp.service.ResumeService;
 import by.akulov.java.cvp.service.UserService;
 import jakarta.servlet.http.HttpSession;
@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 
 @Controller
 public class ResumeController {
@@ -33,6 +32,7 @@ public class ResumeController {
         if (resume != null) {
             PlatformUser resumePlatformUser = resume.getPlatformUser();
             if (resumePlatformUser.getLogin().equals(login)) {
+                model.addAttribute("resumeOwner", resumePlatformUser);
                 model.addAttribute("resume", resume);
                 return "cv";
             } else {

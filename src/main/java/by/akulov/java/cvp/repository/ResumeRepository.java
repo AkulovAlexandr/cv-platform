@@ -1,14 +1,12 @@
 package by.akulov.java.cvp.repository;
 
-import by.akulov.java.cvp.model.Resume;
+import by.akulov.java.cvp.model.resume.Resume;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
 import org.springframework.data.repository.query.Param;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
 
 public interface ResumeRepository extends Repository<Resume, Long> {
 
