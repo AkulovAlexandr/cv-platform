@@ -25,3 +25,18 @@
     max-width: 80%;
     margin: auto;
 }
+
+#cv-edit-block {
+    max-width: 970px;
+}
+
+.jobItem, .skillItem, .eduItem, .contactItem {
+    border: 1px solid lightgray;
+    border-radius: 10px;
+}
+
+.closeButton {
+    max-height: 30px;
+    margin-left: 10px;
+}
+

@@ -20,7 +20,7 @@ public class Resume {
     private Long id;
     @Column(columnDefinition = "VARCHAR(255) default NULL")
     private String title;
-    @Column(name = "common", columnDefinition = "TEXT(10000) default NULL")
+    @Column(name = "common", columnDefinition = "TEXT(1000) default NULL")
     private String commonInfo;
     @Column(name = "education", columnDefinition = "TEXT(10000) default NULL")
     private String educationInfo;

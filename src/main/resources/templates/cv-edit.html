@@ -1,27 +1,172 @@
-<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<!DOCTYPE html>
+<html lang="ru">
 <head>
-    <title>Редактор резюме</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Title</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
 
-<div th:replace="~{header}"></div>
-
-
 <main>
-    <span th:text="${message}"></span>
-    <form th:action="@{/cv/create/}" th:object="${resume}" method="post">
-        <p>Название: <input type="text" th:field="*{title}" /></p>
-        <p>О себе: <input type="text" th:field="*{commonInfo}" /></p>
-        <p>Образование: <input type="text" th:field="*{educationInfo}" /></p>
-        <p>Опыт работы: <input type="text" th:field="*{workExperienceInfo}" /></p>
-        <p>Контакты: <input type="text" th:field="*{contacts}" /></p>
-        <p><input type="submit" value="Создать" /> <input type="reset" value="Очистить" /></p>
-    </form>
+
+    <div class="container" id="cv-edit-block">
+        <div class="py-5 text-center">
+            <img class="d-block mx-auto mb-4" src="../assets/brand/bootstrap-logo.svg" alt="" width="72" height="57">
+            <h2>Checkout form</h2>
+            <p class="lead">Below is an example form built entirely with Bootstrap’s form controls. Each required form
+                group has a validation state that can be triggered by attempting to submit the form without completing
+                it.</p>
+        </div>
+
+
+        <div>
+            <h3 class="mb-4">Отредактируйте резюме</h3>
+            <form th:action="@{/cv/edit/}" th:object="${resume}" method="post" class="needs-validation" novalidate>
+                <div class="row g-3">
+                    <div class="col-12 mb-4">
+                        <label for="title" class="form-label h5">Искомая(ые) должность(и)</label>
+                        <hr class="m-0 mb-3">
+                        <input th:field="*{title}" name="title" type="text" class="form-control" id="title"
+                               placeholder="Например: &#34;JAVA - разработчик, QA - инженер&#34;" value="" required>
+                        <div class="invalid-feedback">
+                            Valid first name is required.
+                        </div>
+                    </div>
+
+                    <div class="col-12 mb-4">
+                        <label for="commonInfo" class="form-label h5">О себе</label>
+                        <hr class="m-0 mb-3">
+                        <textarea th:field="*{commonInfo}" name="commonInfo" maxlength="1000" class="form-control" id="commonInfo"
+                                  placeholder="Например: &#34;Опыт разработки - 5 лет. Знаю иностранные языки. Вышиваю крестиком. Есть кот.&#34;"
+                                  required></textarea>
+                        <div class="invalid-feedback">
+                            Valid first name is required.
+                        </div>
+                    </div>
+
+                    <div class="col-12 mb-5" >
+                        <h5>Навыки</h5>
+                        <hr class="m-0 mb-3">
+                        <div id="skillsBlock" >
+                            <div class="skillItem p-3 mb-3">
+                                <label for="skillRange1" class="form-label d-flex justify-content-between"><input
+                                        name="skillTitle1"
+                                        type="text"
+                                        class="form-control form-control-sm form-label"
+                                        placeholder="Навык" required>
+                                    <button type="button" class="closeButton btn btn-sm btn-outline-danger">X</button>
+                                </label>
+                                <input name="skillRange1" type="range" class="form-range" min="0" max="100"
+                                       id="skillRange1">
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" id="addSkill">Добавить</button>
+                    </div>
+
+                    <div class="col-12 mb-5">
+                        <h5>Опыт работы</h5>
+                        <hr class="m-0 mb-3">
+                        <div id="jobBlock">
+                            <div class="jobItem p-3 mb-3">
+                                <label for="jobTitle1" class="form-label d-flex justify-content-between">Компания
+                                    <button type="button" class="closeButton btn btn-sm btn-outline-danger">X</button>
+                                </label>
+                                <input name="jobTitle1" type="text" class="form-control mb-3" id="jobTitle1"
+                                       placeholder="Например: ОАО &#34;Рога и копыта&#34;" value="" required>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <label for="jobYearStart1" class="form-label">C</label>
+                                        <input name="jobYearStart1" type="number" min="1900" max="2023" class="form-control mb-3"
+                                               id="jobYearStart1"
+                                               placeholder="2020" value="" required>
+                                    </div>
+                                    <div class="col-6">
+                                        <label for="jobYearEnd1" class="form-label">По</label>
+                                        <input name="jobYearEnd1" type="number" min="1900" max="2023" class="form-control mb-3"
+                                               id="jobYearEnd1"
+                                               placeholder="2023" value="" required>
+                                    </div>
+                                </div>
+                                <label for="jobDescription1" class="form-label">Опишите обязанности</label>
+                                <textarea name="jobDescription1" maxlength="1000" class="form-control mb-3" id="jobDescription1"
+                                          placeholder="Например: &#34;Специалист по работе с клиентами. Эффективный менеджер в галстуке и рубашке. Выполнял планы продаж и в ус не дул&#34;"
+                                          required></textarea>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" id="addJob">Добавить</button>
+                    </div>
+
+                    <div class="col-12 mb-5">
+                        <h5>Образование</h5>
+                        <hr class="m-0 mb-3">
+                        <div id="eduBlock">
+                            <div class="eduItem p-3 mb-3">
+                                <label for="eduTitle1" class="form-label d-flex justify-content-between">Учебное
+                                    заведение
+                                    <button type="button" class="closeButton btn btn-sm btn-outline-danger">X</button>
+                                </label>
+                                <input name="eduTitle1" type="text" class="form-control mb-3" id="eduTitle1"
+                                       placeholder="Например: Разработка на JAVA от ООО &#34;Айти-ШАГ&#34;" value=""
+                                       required>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <label for="eduYearStart1" class="form-label">C</label>
+                                        <input name="eduYearStart1" type="number" min="1900" max="2023" class="form-control mb-3"
+                                               id="eduYearStart1"
+                                               placeholder="2020" value="" required>
+                                    </div>
+                                    <div class="col-6">
+                                        <label for="eduYearEnd1" class="form-label">По</label>
+                                        <input name="eduYearEnd1" type="number" min="1900" max="2023" class="form-control mb-3"
+                                               id="eduYearEnd1"
+                                               placeholder="2023" value="" required>
+                                    </div>
+                                </div>
+                                <label for="eduDescription1" class="form-label">Описание</label>
+                                <textarea name="eduDescription1" maxlength="1000" class="form-control mb-3" id="eduDescription1"
+                                          placeholder="Опишите чему научились, какой диплом получили. Например: &#34;Научился программировать&#34;"
+                                          required></textarea>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" id="addEducation">Добавить</button>
+                    </div>
+
+                    <div class="col-12 mb-5">
+                        <h5>Контакты для связи</h5>
+                        <hr class="m-0 mb-3">
+                        <div id="contactBlock">
+                            <div class="contactItem p-3 mb-3">
+                                <label for="contactData1" class="form-label d-flex justify-content-between">Контакт
+                                    <button type="button" class="closeButton btn btn-sm btn-outline-danger">X</button>
+                                </label>
+                                <input name="contactData1" type="text" class="form-control mb-3" id="contactData1"
+                                       placeholder="Например: &#34;+375 44 700 00 00&#34; или &#34;mail@email.com&#34; или &#34;https://url.com&#34;"
+                                       value="" required>
+                                <label for="contactType1" class="form-label">Тип контакта</label>
+                                <select name="contactType1" class="form-select" id="contactType1" required>
+                                    <option value="">Выберите тип...</option>
+                                    <option value="PHONE">Телефон</option>
+                                    <option value="EMAIL">Почта</option>
+                                    <option value="LINK">Ссылка</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" id="addContact">Добавить</button>
+                    </div>
+
+                </div>
+                <button class="w-100 btn btn-primary btn-lg" type="submit">Сохранить</button>
+            </form>
+        </div>
+    </div>
+
+
 </main>
-<a th:href="@{/cv/list/}">Показать мои резюме</a>
 
-<div th:replace="~{footer}"></div>
-
+<script src="/js/bootstrap.bundle.min.js"></script>
+<script src="/js/form-validation.js"></script>
+<script src="/js/element-injection.js"></script>
 </body>
 </html>
