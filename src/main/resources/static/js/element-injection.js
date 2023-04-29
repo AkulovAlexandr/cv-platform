@@ -114,9 +114,9 @@ addContactBtn.onclick = (e) => {
                                                                      <label for="contactType${contactCounter}" class="form-label">Тип контакта</label>
                                                                      <select name="contactType${contactCounter}" class="form-select" id="contactType${contactCounter}" required>
                                                                             <option value="">Выберите тип...</option>
-                                                                            <option>Телефон</option>
-                                                                            <option>Почта</option>
-                                                                            <option>Ссылка</option>
+                                                                            <option value="PHONE">Телефон</option>
+                                                                            <option value="EMAIL">Почта</option>
+                                                                            <option value="LINK">Ссылка</option>
                                                                      </select>
                                                                  </div>`);
         contactCounter++;

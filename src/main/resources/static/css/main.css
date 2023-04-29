@@ -1,21 +1,3 @@
-/*#header, #footer {*/
-/*    background-color: darkgray;*/
-/*    height: 60px;*/
-/*    border-radius: 15px;*/
-/*    text-align: center;*/
-/*}*/
-
-/*table {*/
-/*    border-collapse: collapse;*/
-/*    border: 1px solid silver;*/
-/*    background-color: silver;"*/
-/*    border-radius: 15px;*/
-/*}*/
-
-/*td {*/
-/*    padding: 10px;*/
-/*}*/
-
 #navbar-cv {
     background-color: white;
     margin-bottom: 10px;
@@ -40,3 +22,60 @@
     margin-left: 10px;
 }
 
+body {
+    font-family: Calibri, serif;
+    background-color: #f4f4f4;
+
+}
+
+#nav-header {
+    background-color:#0d6efd ;
+    font-size: 20px;
+}
+
+#nav-header li {
+    font-weight: 600;
+    font-variant-caps: all-petite-caps;
+}
+
+#nav-header li a:hover {
+    color: #2f2f2f;
+}
+
+#nav-header li a:active {
+    color: #595959;
+}
+
+
+#nav-brand {
+    padding-left: 20px;
+}
+
+#nav-userName ul li a {
+    font-family: Calibri, serif;
+    font-weight: bold;
+}
+
+#nav-userName ul li a:active {
+    background-color: var(--bs-dropdown-link-hover-bg);
+}
+
+#nav-exit-btn {
+    font-weight: 600;
+}
+
+#main-product {
+    max-width: 600px;
+    background-color: rgba(0,0,0, 0);
+}
+
+#main-demo-img img {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+    border-radius: 21px 21px 0 0;
+}
+
+#main-carousel {
+    width: 860px;
+}

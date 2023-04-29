@@ -3,11 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Title</title>
+    <title th:text="${userCredentials} + ' - резюме'"></title>
     <link rel="stylesheet" href="/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/main.css">
 </head>
 <body class="bg-light">
+
+<div th:replace="~{header}"></div>
 
 <nav id="navbar-cv" class="navbar navbar-expand-md d-flex justify-content-center py-3 sticky-top fixed-top">
 
@@ -63,85 +65,96 @@
 
         <div id="scrollspyHeading3" class="container-fluid mb-5 px-4 py-5 bg-white border-3">
             <h4 class="pb-2 mb-4 border-bottom">Опыт работы</h4>
-            <div class="accordion" id="accordionPanelsStayOpen" th:each="experience : *{experiences}">
-                <div th:switch="${experience.type}">
-                    <div th:case="'JOB'" class="accordion-item">
-                        <h2 class="accordion-header" id="panelsStayOpen-headingOne">
-                            <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                                    data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true"
-                                    aria-controls="panelsStayOpen-collapseOne">
-                                <span th:text="${experience.title} + ' '"></span>
-                                <span th:text="${experience.startYear} + 'г. - ' + ${experience.endYear} + 'г.'"></span>
-                            </button>
-                        </h2>
-                        <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show"
-                             aria-labelledby="panelsStayOpen-headingOne">
-                            <div class="accordion-body" th:text="${experience.description}">
+            <div th:switch="${resume.jobs.size()}">
+                <div th:case="0"><h3 class="fs-2">Не указано</h3></div>
+                <div th:case="*">
+                    <div class="accordion" id="accordionPanelsStayOpen" th:each="job : ${resume.jobs}">
+                        <div th:if="${job.getType().equals('JOB')}" class="accordion-item">
+                            <h2 class="accordion-header" id="panelsStayOpen-headingOne">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true"
+                                        aria-controls="panelsStayOpen-collapseOne">
+                                    <span th:text="${job.title} + ' '"></span>
+                                    <span th:text="${job.startYear} + 'г. - ' + ${job.endYear} + 'г.'"></span>
+                                </button>
+                            </h2>
+                            <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show"
+                                 aria-labelledby="panelsStayOpen-headingOne">
+                                <div class="accordion-body" th:text="${job.description}">
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div id="scrollspyHeading4" class="container-fluid mb-5 px-4 py-5 bg-white border-3">
-            <h4 class="pb-2 mb-4 border-bottom">Образование</h4>
-            <div class="accordion" id="edu-accordionPanelsStayOpen" th:each="experience : *{experiences}">
-                <div th:switch="${experience.type}">
-                    <div th:case="'EDUCATION'" class="accordion-item">
-                        <h2 class="accordion-header" id="edu-panelsStayOpen-headingOne">
-                            <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                                    data-bs-target="#edu-panelsStayOpen-collapseOne" aria-expanded="true"
-                                    aria-controls="edu-panelsStayOpen-collapseOne">
-                                <span th:text="${experience.title} + ' '"></span>
-                                <span th:text="${experience.startYear} + 'г. - ' + ${experience.endYear} + 'г.'"></span>
-                            </button>
-
-                        </h2>
-                        <div id="edu-panelsStayOpen-collapseOne" class="accordion-collapse collapse show"
-                             aria-labelledby="edu-panelsStayOpen-headingOne">
-                            <div class="accordion-body" th:text="${experience.description}">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div id="scrollspyHeading5" class="container-fluid mb-5 px-4 py-5 bg-white border-3">
-            <h4 class="pb-2 mb-4 border-bottom">Контакты</h4>
-            <div th:each="contact : ${resume.contacts}" class="container px-4" id="featured-3">
-                <div th:switch="${contact.type}" class="row g-4 row-cols-1 row-cols-lg-3">
-                    <div th:case="'EMAIL'" class="feature col">
-                        <div class="feature-icon d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-2 mb-3">
-                            <svg class="bi" width="1em" height="1em">
-                            </svg>
-                        </div>
-                        <h3 class="fs-2">Почта</h3>
-                        <p th:text="${contact.data}"></p>
-                    </div>
-                    <div th:case="'PHONE'" class="feature col">
-                        <div class="feature-icon d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-2 mb-3">
-                            <svg class="bi" width="1em" height="1em">
-                                <use xlink:href="#people-circle"/>
-                            </svg>
-                        </div>
-                        <h3 class="fs-2">Телефон</h3>
-                        <p th:text="${contact.data}"></p>
-                    </div>
-                    <div th:case="'LINK'" class="feature col">
-                        <div class="feature-icon d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-2 mb-3">
-                            <svg class="bi" width="1em" height="1em">
-                                <use xlink:href="#toggles2"/>
-                            </svg>
-                        </div>
-                        <h3 class="fs-2">Ссылки</h3>
-                        <a th:href="@{${contact.data}}" th:text="${contact.data}"></a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <div id="scrollspyHeading4" class="container-fluid mb-5 px-4 py-5 bg-white border-3">
+        <h4 class="pb-2 mb-4 border-bottom">Образование</h4>
+        <div th:switch="${resume.educations.size()}">
+            <div th:case="0"><h3 class="fs-2">Не указано</h3></div>
+            <div th:case="*">
+                <div class="accordion" id="edu-accordionPanelsStayOpen" th:each="edu : ${resume.educations}">
+                    <div th:if="${edu.getType().equals('EDUCATION')}" class="accordion-item">
+                        <h2 class="accordion-header" id="edu-panelsStayOpen-headingOne">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#edu-panelsStayOpen-collapseOne" aria-expanded="true"
+                                    aria-controls="edu-panelsStayOpen-collapseOne">
+                                <span th:text="${edu.title} + ' '"></span>
+                                <span th:text="${edu.startYear} + 'г. - ' + ${edu.endYear} + 'г.'"></span>
+                            </button>
+                        </h2>
+                        <div id="edu-panelsStayOpen-collapseOne" class="accordion-collapse collapse show"
+                             aria-labelledby="edu-panelsStayOpen-headingOne">
+                            <div class="accordion-body" th:text="${edu.description}">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="scrollspyHeading5" class="container-fluid mb-5 px-4 py-5 bg-white border-3">
+        <h4 class="pb-2 mb-4 border-bottom">Контакты</h4>
+        <div th:switch="${resume.contacts.size()}">
+            <div th:case="0"><h3 class="fs-2">Не указано</h3></div>
+            <div th:case="*">
+                <div th:each="contact : ${resume.contacts}" class="container px-4" id="featured-3">
+                    <div th:switch="${contact.type}" class="row g-4 row-cols-1 row-cols-lg-3">
+                        <div th:case="'EMAIL'" class="feature col">
+                            <div class="feature-icon d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-2 mb-3">
+                                <svg class="bi" width="1em" height="1em">
+                                </svg>
+                            </div>
+                            <h3 class="fs-2">Почта</h3>
+                            <p th:text="${contact.data}"></p>
+                        </div>
+                        <div th:case="'PHONE'" class="feature col">
+                            <div class="feature-icon d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-2 mb-3">
+                                <svg class="bi" width="1em" height="1em">
+                                    <use xlink:href="#people-circle"/>
+                                </svg>
+                            </div>
+                            <h3 class="fs-2">Телефон</h3>
+                            <p th:text="${contact.data}"></p>
+                        </div>
+                        <div th:case="'LINK'" class="feature col">
+                            <div class="feature-icon d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-2 mb-3">
+                                <svg class="bi" width="1em" height="1em">
+                                    <use xlink:href="#toggles2"/>
+                                </svg>
+                            </div>
+                            <h3 class="fs-2">Ссылки</h3>
+                            <a th:href="@{${contact.data}}" th:text="${contact.data}"></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
 </main>
 <script src="/js/bootstrap.bundle.min.js"></script>

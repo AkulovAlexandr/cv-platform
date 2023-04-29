@@ -35,5 +35,16 @@ public class Experience {
         return Objects.hash(id, title, startYear, endYear, description, type);
     }
 
-
+    @Override
+    public String toString() {
+        return "Experience{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", startYear=" + startYear +
+                ", endYear=" + endYear +
+                ", description='" + description + '\'' +
+                ", type='" + type + '\'' +
+                ", resume_id=" + resume.getId() +
+                '}';
+    }
 }

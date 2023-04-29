@@ -29,7 +29,7 @@ public class ResumeController {
     private UserService userService;
 
     @GetMapping("/cv/{id}/")
-    public String getResumePage(@PathVariable Long id, HttpSession session, Model model) {
+    public String getResumePage(@PathVariable Long id, Model model) {
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
         Resume resume = resumeService.findById(id);
         if (resume != null) {
@@ -56,13 +56,12 @@ public class ResumeController {
             Long resumeID = resume.getId();
             if ((id.equals(resumeID))) {
                 resumeService.deleteResumeById(id);
-                //как вместе с редиректом передать message?
                 model.addAttribute("message", "Резюме удалено!");
                 return "redirect:/cv/list/";
             }
         }
         model.addAttribute("message", "Нет доступа к запрашиваемому резюме!");
-        return "forward:/cv/list/";
+        return "redirect:/cv/list/";
     }
 
     @GetMapping("/cv/list/")
@@ -70,99 +69,78 @@ public class ResumeController {
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
         PlatformUser platformUser = userService.findUserByLogin(login);
         ArrayList<Resume> resumes = new ArrayList<>(platformUser.getResume());
-        if (resumes.size() > 0) {
-            model.addAttribute("resumes", resumes);
-            return "cv-list";
+        model.addAttribute("resumes", resumes);
+        model.addAttribute("resumesQuantity", resumes.size());
+        if (model.getAttribute("message") == null) {
+            model.addAttribute("message", "");
         }
-        return "redirect:/cv/edit/";
+        return "cv-list";
     }
 
-    @GetMapping("/cv/edit/")
-    public String getCreatePage(Model model) {
+    @GetMapping(value = {"/cv/edit/", "/cv/edit/{id}/"})
+    public String getCreatePage(@PathVariable(required = false) Long id, Model model) {
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
-       
-        model.addAttribute("resume", new Resume());
-
-        return "cv-edit";
-    }
-
-    @PostMapping("/cv/edit/")
-    public String saveResume(@ModelAttribute Resume resume, Model model, WebRequest request) {
-        String login = SecurityContextHolder.getContext().getAuthentication().getName();
-        Map<String, String[]> parameterMap = request.getParameterMap();
-        resume.setPlatformUser(userService.findUserByLogin(login));
-        if (resumeService.save(parametersMappingToResume(parameterMap, resume)) != null) {
-            model.addAttribute("message", "Резюме сохранено!");
+        PlatformUser platformUser;
+        if (null == id) {
+            platformUser = userService.findUserByLogin(login);
+            model.addAttribute("resumeOwner", platformUser);
+            model.addAttribute("resume", new Resume());
+            return "cv-edit";
         } else {
-            model.addAttribute("message", "Не сохранилось");
+            Resume resume = resumeService.findById(id);
+            if (resume != null) {
+                platformUser = resume.getPlatformUser();
+                if (platformUser.getLogin().equals(login)) {
+                    model.addAttribute("resumeOwner", platformUser);
+                    model.addAttribute("resume", resume);
+                    return "cv-edit";
+                } else {
+                    model.addAttribute("message", "Ошибка открытия резюме. Доступ запрещен");
+                    return "forward:/cv/list/";
+                }
+            }
+            model.addAttribute("message", "Ошибка открытия резюме.");
+            return "forward:/cv/list/";
         }
-        return "cv-edit";
     }
 
-    private Resume parametersMappingToResume(Map<String, String[]> map, Resume resume) {
-
-        List<Skill> skillList = new ArrayList<>();
-        List<Experience> experienceList = new ArrayList<>();
-        List<Contact> contactList = new ArrayList<>();
-
-        List<String> skillKeys = map.keySet().stream()
-                .filter(strings -> strings.matches(".*skill.*"))
-                .toList();
-
-        List<String> jobKeys = map.keySet().stream()
-                .filter(strings -> strings.matches(".*job.*"))
-                .toList();
-
-        List<String> educationKeys = map.keySet().stream()
-                .filter(strings -> strings.matches(".*edu.*"))
-                .toList();
-
-        List<String> contactKeys = map.keySet().stream()
-                .filter(strings -> strings.matches(".*contact.*"))
-                .toList();
-
-        for (int i = 1; i < skillKeys.size(); i += 2) {
-            Skill skill = new Skill();
-            skill.setTitle(map.get(skillKeys.get(i - 1))[0]);
-            skill.setPercent(Integer.valueOf(map.get(skillKeys.get(i))[0]));
-            skill.setResume(resume);
-            skillList.add(skill);
+    @PostMapping(value = {"/cv/edit/", "/cv/edit/{id}/"})
+    public String saveResume(@PathVariable(required = false) Long id, @ModelAttribute Resume resume, Model model, WebRequest request) {
+        String login = SecurityContextHolder.getContext().getAuthentication().getName();
+        PlatformUser platformUser = userService.findUserByLogin(login);
+        Map<String, String[]> parameterMap = request.getParameterMap();
+        if (null == id) {
+            resume.setPlatformUser(platformUser);
+            if (resumeService.save(resumeService.parametersMappingToResume(parameterMap, resume)) != null) {
+                model.addAttribute("message", "Резюме сохранено!");
+            } else {
+                model.addAttribute("message", "Не сохранилось");
+            }
+        } else {
+            Resume resumeToUpdate = resumeService.findById(id);
+            if (resumeToUpdate != null && resumeToUpdate.getPlatformUser().equals(platformUser)) {
+                resumeToUpdate.setTitle(resume.getTitle());
+                resumeToUpdate.setCommonInfo(resume.getCommonInfo());
+                resumeService.save(resumeService.parametersMappingToResume(parameterMap, resumeToUpdate));
+                model.addAttribute("message", "Резюме сохранено");
+            } else {
+                model.addAttribute("message", "Резюме не найдено");
+            }
         }
+        return "redirect:/cv/list/";
+    }
 
-        for (int i = 1; i < jobKeys.size(); i += 4) {
-            Experience job = new Experience();
-            job.setTitle(map.get(jobKeys.get(i - 1))[0]);
-            job.setStartYear(Integer.valueOf(map.get(jobKeys.get(i))[0]));
-            job.setEndYear(Integer.valueOf(map.get(jobKeys.get(i + 1))[0]));
-            job.setDescription(map.get(jobKeys.get(i + 2))[0]);
-            job.setType(String.valueOf(ExperienceType.JOB));
-            job.setResume(resume);
-            experienceList.add(job);
+    @ModelAttribute("userCredentials")
+    public String populateUserCredentials() {
+        String login = SecurityContextHolder.getContext().getAuthentication().getName();
+        if ("anonymousUser".equals(login)) {
+            return "";
+        } else {
+            PlatformUser user = userService.findUserByLogin(login);
+            return user.getName() +
+                    " " +
+                    user.getSurname();
         }
-
-        for (int i = 1; i < educationKeys.size(); i += 4) {
-            Experience edu = new Experience();
-            edu.setTitle(map.get(educationKeys.get(i - 1))[0]);
-            edu.setStartYear(Integer.valueOf(map.get(educationKeys.get(i))[0]));
-            edu.setEndYear(Integer.valueOf(map.get(educationKeys.get(i + 1))[0]));
-            edu.setDescription(map.get(educationKeys.get(i + 2))[0]);
-            edu.setType(String.valueOf(ExperienceType.EDUCATION));
-            edu.setResume(resume);
-            experienceList.add(edu);
-        }
-
-        for (int i = 1; i < contactKeys.size(); i += 2) {
-            Contact contact = new Contact();
-            contact.setData(map.get(contactKeys.get(i - 1))[0]);
-            contact.setType(map.get(contactKeys.get(i))[0]);
-            contact.setResume(resume);
-            contactList.add(contact);
-        }
-
-        resume.setSkills(skillList);
-        resume.setContacts(contactList);
-        resume.setExperiences(experienceList);
-        return resume;
     }
 
 }

@@ -31,21 +31,7 @@ import java.util.Collection;
 
 @Configuration
 @EnableWebSecurity
-@RequiredArgsConstructor
 public class SecurityConfig {
-
-    @Autowired
-    private final ApplicationContext applicationContext;
-
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private ResumeRepository resumeRepository;
-
-    @Autowired
-    private UserRepository userRepository;
-
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -62,7 +48,8 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**")).permitAll()
-                        .requestMatchers("/", "/cv/", "/cv/**", "/resources/**", "/js/**", "/css/**").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/", "/images/**", "/js/**", "/css/**").permitAll()
+                        .requestMatchers("/cv/", "/cv/**").hasAnyRole("USER", "ADMIN")
                 )
                 .formLogin().permitAll()
                 .and()

@@ -9,4 +9,5 @@ public interface UserService extends UserDetailsService {
 
     PlatformUser findUserByLogin(String login);
 
+    void save(PlatformUser user);
 }

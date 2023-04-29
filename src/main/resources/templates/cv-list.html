@@ -1,7 +1,10 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="ru">
 <head>
-    <title>Все созданные вами резюме</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/main.css">
+    <title th:text="${userCredentials} + ' - список резюме'"></title>
 </head>
 <body>
 
@@ -9,19 +12,63 @@
 
 
 <main>
-    <span th:text="${message}"></span>
-    <h1>Ваши резюме</h1>
-    <table>
-        <tr th:each="resume : ${resumes}">
-            <td th:text="${resume.title}"></td>
-            <td><a th:href="@{/cv/{id}/(id=${resume.id})}">Показать</a></td>
-            <td><a th:href="@{/cv/delete/{id}/(id=${resume.id})}">Удалить</a></td>
-        </tr>
-    </table>
-    <p><a href="/cv/edit/">Создать резюме</a></p>
+
+
+    <section class="py-5 text-center container">
+        <div class="row py-lg-5">
+            <div class="col-lg-6 col-md-8 mx-auto">
+                <h1 class="fw-light" th:text="${userCredentials}"></h1>
+                <p class="lead text-muted">Добро пожаловать на персональную страницу. Создавайте и удаляйте,
+                    редактируйте и публикуйте Ваше резюме здесь!</p>
+                <p>
+                    <a th:href="@{/cv/edit/}" class="btn btn-primary my-2">Добавить новое резюме</a>
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <div class="album py-5 bg-light">
+        <div th:switch="${message.length()}">
+            <div th:case="0"></div>
+            <div th:case="*">
+                <h3 class="fw-light" th:text="${message}"></h3>
+            </div>
+        </div>
+        <div th:switch="${resumes.size()}" class="container">
+            <div th:case="0" class="text-center">
+                <h3 class="fw-light" th:text="'Список ваших резюме пуст!'"></h3>
+            </div>
+            <div th:case="*" class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+                <div th:each="resume : ${resumes}">
+                    <div class="col">
+                        <div class="card shadow-sm">
+                            <div class="card-body">
+                                <h3 class="fw-light" th:text="${resume.commonInfo}"></h3>
+                                <p class="card-text" th:text="${resume.title}"></p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="btn-group">
+                                        <a class="btn btn-sm btn-outline-primary"
+                                           th:href="@{/cv/{id}/(id=${resume.id})}">Показать</a>
+                                        <a class="btn btn-sm btn-outline-warning"
+                                           th:href="@{/cv/edit/{id}/(id=${resume.id})}">Редактировать</a>
+                                        <a class="btn btn-sm btn-outline-danger"
+                                           th:href="@{/cv/delete/{id}/(id=${resume.id})}">Удалить</a>
+                                    </div>
+                                    <small class="text-muted">9 mins</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </main>
 <a th:href="@{/}">Назад</a>
+
 <div th:replace="~{footer}"></div>
 
+
+<script src="/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

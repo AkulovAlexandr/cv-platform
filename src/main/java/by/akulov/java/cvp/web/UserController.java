@@ -9,23 +9,28 @@ import by.akulov.java.cvp.model.resume.contact.ContactType;
 import by.akulov.java.cvp.model.resume.experience.Experience;
 import by.akulov.java.cvp.model.resume.experience.ExperienceType;
 import by.akulov.java.cvp.repository.UserRepository;
+import by.akulov.java.cvp.service.UserService;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 @Controller
 public class UserController {
 
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -44,7 +49,7 @@ public class UserController {
         Contact email2 = new Contact();
         email2.setResume(resume);
         email2.setData("+375 44 533 50 05");
-        email2.setType(String.valueOf(ContactType.EMAIL));
+        email2.setType(String.valueOf(ContactType.PHONE));
 
         Contact link = new Contact();
         link.setResume(resume);
@@ -110,13 +115,14 @@ public class UserController {
         edu3.setType(String.valueOf(ExperienceType.EDUCATION));
         edu3.setResume(resume);
 
-        Collection<Experience> experiences = new ArrayList<>();
-        experiences.add(job1);
-        experiences.add(job2);
-        experiences.add(job3);
-        experiences.add(edu1);
-        experiences.add(edu2);
-        experiences.add(edu3);
+        Collection<Experience> jobs = new ArrayList<>();
+        Collection<Experience> edus = new ArrayList<>();
+        jobs.add(job1);
+        jobs.add(job2);
+        jobs.add(job3);
+        edus.add(edu1);
+        edus.add(edu2);
+        edus.add(edu3);
 
         Collection<Contact> contacts = new ArrayList<>();
         contacts.add(email);
@@ -138,11 +144,10 @@ public class UserController {
 
         resume.setTitle("Сварщик, блогер, оптимист");
         resume.setCommonInfo("Я создал это резюме для теста. Тут может быть множество текстов.");
-        resume.setWorkExperienceInfo("Работа 1");
-        resume.setEducationInfo("Учеба 1");
         resume.setContacts(contacts);
         resume.setSkills(skills);
-        resume.setExperiences(experiences);
+        resume.setJobs(jobs);
+        resume.setEducations(edus);
 
         Collection<Resume> resumes = new ArrayList<>();
         resumes.add(resume);
@@ -154,24 +159,27 @@ public class UserController {
         user.setSurname("Akulov");
         user.setResume(resumes);
 
-        userRepository.save(user);
-
+        userService.save(user);
 
     }
 
 
     @GetMapping("/")
-    public String index(Model model) {
-        String name = SecurityContextHolder.getContext().getAuthentication().getName();
-        String surname = SecurityContextHolder.getContext().getAuthentication().getAuthorities().toString();
-        model.addAttribute("name", name);
-        model.addAttribute("surname", surname);
+    public String index() {
         return "index";
     }
-//
-//    @GetMapping("/login")
-//    public String login(Model model) {
-//        return "login";
-//    }
+
+    @ModelAttribute("userCredentials")
+    public String populateUserCredentials() {
+        String login = SecurityContextHolder.getContext().getAuthentication().getName();
+        if ("anonymousUser".equals(login)) {
+            return "anon";
+        } else {
+            PlatformUser user = userService.findUserByLogin(login);
+            return user.getName() +
+                    " " +
+                    user.getSurname();
+        }
+    }
 
 }

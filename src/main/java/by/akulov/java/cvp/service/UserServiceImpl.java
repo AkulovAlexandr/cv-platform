@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
+
     @Autowired
     private UserRepository userRepository;
 
@@ -33,6 +34,11 @@ public class UserServiceImpl implements UserService {
                 .findFirstByLogin(login)
                 .orElseThrow(() ->
                         new UsernameNotFoundException("Пользователь с именем \"" + login + "\" - не найден"));
+    }
+
+    @Override
+    public void save(PlatformUser user) {
+        userRepository.save(user);
     }
 
 
