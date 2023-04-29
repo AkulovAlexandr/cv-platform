@@ -6,27 +6,19 @@ import by.akulov.java.cvp.model.resume.Resume;
 import by.akulov.java.cvp.model.resume.Skill;
 import by.akulov.java.cvp.model.resume.contact.Contact;
 import by.akulov.java.cvp.model.resume.contact.ContactType;
-import by.akulov.java.cvp.model.resume.experience.Education;
 import by.akulov.java.cvp.model.resume.experience.Experience;
 import by.akulov.java.cvp.model.resume.experience.ExperienceType;
-import by.akulov.java.cvp.model.resume.experience.Job;
-import by.akulov.java.cvp.repository.UserRepository;
 import by.akulov.java.cvp.service.UserService;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 @Controller
 public class UserController {
@@ -77,42 +69,48 @@ public class UserController {
             thirdSkill.setTitle("PHP");
             thirdSkill.setPercent(10);
 
-            Experience job1 = new Job();
-            Experience job2 = new Job();
-            Experience job3 = new Job();
+            Experience job1 = new Experience();
+            Experience job2 = new Experience();
+            Experience job3 = new Experience();
             job1.setTitle("ООО Компания");
             job1.setDescription("Работал в компании. Выполнял обязаности такие как: первое, второе, третее");
             job1.setStartYear(2015);
             job1.setEndYear(2016);
+            job1.setType(ExperienceType.JOB.name());
             job1.setResume(resume);
             job2.setTitle("ЧТУП Компания");
             job2.setDescription("Работал в компании. Выполнял обязаности такие как: первое, второе, третее");
             job2.setStartYear(2016);
             job2.setEndYear(2019);
+            job2.setType(ExperienceType.JOB.name());
             job2.setResume(resume);
             job3.setTitle("ОАО Компания");
             job3.setDescription("Работал в компании. Выполнял обязаности такие как: первое, второе, третее");
             job3.setStartYear(2019);
             job3.setEndYear(2023);
+            job3.setType(ExperienceType.JOB.name());
             job3.setResume(resume);
 
-            Experience edu1 = new Education();
-            Experience edu2 = new Education();
-            Experience edu3 = new Education();
+            Experience edu1 = new Experience();
+            Experience edu2 = new Experience();
+            Experience edu3 = new Experience();
             edu1.setTitle("Курсы JAVA");
             edu1.setDescription("Умею немного писать код. Вот этот сайт написал например");
             edu1.setStartYear(2021);
             edu1.setEndYear(2023);
+            edu1.setType(ExperienceType.EDUCATION.name());
             edu1.setResume(resume);
             edu2.setTitle("Курсы QA");
             edu2.setDescription("Тестировщик ПО, мануальный");
             edu2.setStartYear(2021);
             edu2.setEndYear(2022);
+            edu2.setType(ExperienceType.EDUCATION.name());
             edu2.setResume(resume);
             edu3.setTitle("БТЭУПК");
             edu3.setDescription("Учился в вузе на логиста. Диплом валяется. А, еще магистратуру закончил. Тоже валяется");
             edu3.setStartYear(2011);
             edu3.setEndYear(2015);
+            edu3.setType(ExperienceType.EDUCATION.name());
             edu3.setResume(resume);
 
             Collection<Experience> jobs = new ArrayList<>();

@@ -3,16 +3,9 @@ package by.akulov.java.cvp.service;
 import by.akulov.java.cvp.model.resume.Resume;
 import by.akulov.java.cvp.model.resume.Skill;
 import by.akulov.java.cvp.model.resume.contact.Contact;
-import by.akulov.java.cvp.model.resume.experience.Education;
 import by.akulov.java.cvp.model.resume.experience.Experience;
 import by.akulov.java.cvp.model.resume.experience.ExperienceType;
-import by.akulov.java.cvp.model.resume.experience.Job;
-import by.akulov.java.cvp.repository.ContactRepository;
-import by.akulov.java.cvp.repository.ExperienceRepository;
 import by.akulov.java.cvp.repository.ResumeRepository;
-import by.akulov.java.cvp.repository.SkillRepository;
-import jakarta.transaction.Transactional;
-import org.apache.tomcat.Jar;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,13 +18,6 @@ public class ResumeServiceImpl implements ResumeService {
 
     @Autowired
     private ResumeRepository resumeRepository;
-
-    @Autowired
-    private ContactRepository contactRepository;
-    @Autowired
-    private SkillRepository skillRepository;
-    @Autowired
-    private ExperienceRepository experienceRepository;
 
     @Override
     public Resume parametersMappingToResume(Map<String, String[]> map, Resume resume) {
@@ -66,21 +52,23 @@ public class ResumeServiceImpl implements ResumeService {
         }
 
         for (int i = 1; i < jobKeys.size(); i += 4) {
-            Experience job = new Job();
+            Experience job = new Experience();
             job.setTitle(map.get(jobKeys.get(i - 1))[0]);
             job.setStartYear(Integer.valueOf(map.get(jobKeys.get(i))[0]));
             job.setEndYear(Integer.valueOf(map.get(jobKeys.get(i + 1))[0]));
             job.setDescription(map.get(jobKeys.get(i + 2))[0]);
+            job.setType(ExperienceType.JOB.name());
             job.setResume(resume);
             jobsList.add(job);
         }
 
         for (int i = 1; i < educationKeys.size(); i += 4) {
-            Experience edu = new Education();
+            Experience edu = new Experience();
             edu.setTitle(map.get(educationKeys.get(i - 1))[0]);
             edu.setStartYear(Integer.valueOf(map.get(educationKeys.get(i))[0]));
             edu.setEndYear(Integer.valueOf(map.get(educationKeys.get(i + 1))[0]));
             edu.setDescription(map.get(educationKeys.get(i + 2))[0]);
+            edu.setType(ExperienceType.EDUCATION.name());
             edu.setResume(resume);
             educationsList.add(edu);
         }
@@ -118,11 +106,7 @@ public class ResumeServiceImpl implements ResumeService {
 
     @Override
     public void deleteResumeById(Long id) {
-        Resume resume = resumeRepository.findFirstById(id);
-        contactRepository.deleteAllByResume_id(id);
-        skillRepository.deleteAllByResume_id(id);
-        experienceRepository.deleteAllByResume_id(id);
-        resumeRepository.delete(resume);
+        resumeRepository.deleteById(id);
     }
 
 

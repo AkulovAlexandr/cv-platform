@@ -2,11 +2,11 @@ package by.akulov.java.cvp.model.resume;
 
 import by.akulov.java.cvp.model.PlatformUser;
 import by.akulov.java.cvp.model.resume.contact.Contact;
-import by.akulov.java.cvp.model.resume.experience.Education;
 import by.akulov.java.cvp.model.resume.experience.Experience;
-import by.akulov.java.cvp.model.resume.experience.Job;
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.Where;
+
 import java.util.Collection;
 import java.util.Objects;
 
@@ -23,15 +23,17 @@ public class Resume {
     private String title;
     @Column(name = "common", columnDefinition = "TEXT(1000) default NULL")
     private String commonInfo;
-    @OneToMany(mappedBy = "resume", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "resume", cascade = CascadeType.ALL)
     private Collection<Skill> skills;
-    @OneToMany(mappedBy = "resume", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY, targetEntity = Job.class)
+    @OneToMany(mappedBy = "resume", cascade = CascadeType.ALL)
+    @Where(clause = "type = 'JOB'")
     private Collection<Experience> jobs;
-    @OneToMany(mappedBy = "resume", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY, targetEntity = Education.class)
+    @OneToMany(mappedBy = "resume", cascade = CascadeType.ALL)
+    @Where(clause = "type = 'EDUCATION'")
     private Collection<Experience> educations;
-    @OneToMany(mappedBy = "resume", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "resume", cascade = CascadeType.ALL)
     private Collection<Contact> contacts;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "user_id")
     private PlatformUser platformUser;
 

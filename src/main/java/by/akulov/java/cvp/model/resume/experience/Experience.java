@@ -8,21 +8,20 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "EXPERIENCES")
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "EXP_TYPE")
 @Data
-public abstract class Experience {
+public class Experience {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String title;
-    private Integer startYear;
-    private Integer endYear;
-    private String description;
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name = "resume_id")
     private Resume resume;
+    private String title;
+    private String description;
+    private Integer startYear;
+    private Integer endYear;
+    private String type;
 
     @Override
     public boolean equals(Object o) {

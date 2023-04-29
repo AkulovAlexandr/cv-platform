@@ -15,7 +15,7 @@ public class Skill {
     private Long id;
     private String title;
     private Integer percent;
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name = "resume_id")
     private Resume resume;
 

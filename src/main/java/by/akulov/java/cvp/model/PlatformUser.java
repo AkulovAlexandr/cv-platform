@@ -22,7 +22,7 @@ public class PlatformUser {
     private String login;
     private String password;
     private String role;
-    @OneToMany(mappedBy = "platformUser", cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "platformUser", cascade = CascadeType.PERSIST)
     private Collection<Resume> resume;
 
     @Override
