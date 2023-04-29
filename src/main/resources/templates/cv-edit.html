@@ -80,7 +80,7 @@
                         <hr class="m-0 mb-3">
                         <div id="jobBlock">
                             <div th:each="job, iteration : ${resume.jobs}">
-                                <div th:if="${job.getType().equals('JOB')}" class="jobItem p-3 mb-3">
+                                <div class="jobItem p-3 mb-3">
                                     <label th:for="'jobTitle' + ${iteration.index + 1}"
                                            class="form-label d-flex justify-content-between">Компания
                                         <button type="button" class="closeButton btn btn-sm btn-outline-danger">X
@@ -129,7 +129,7 @@
                         <hr class="m-0 mb-3">
                         <div id="eduBlock">
                             <div th:each="edu, iteration : ${resume.educations}">
-                                <div th:if="${edu.getType().equals('EDUCATION')}" class="eduItem p-3 mb-3">
+                                <div class="eduItem p-3 mb-3">
                                     <label th:for="'eduTitle' + ${iteration.index + 1}"
                                            class="form-label d-flex justify-content-between">Учебное
                                         заведение

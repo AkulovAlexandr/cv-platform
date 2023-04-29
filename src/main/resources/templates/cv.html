@@ -69,7 +69,7 @@
                 <div th:case="0"><h3 class="fs-2">Не указано</h3></div>
                 <div th:case="*">
                     <div class="accordion" id="accordionPanelsStayOpen" th:each="job : ${resume.jobs}">
-                        <div th:if="${job.getType().equals('JOB')}" class="accordion-item">
+                        <div class="accordion-item">
                             <h2 class="accordion-header" id="panelsStayOpen-headingOne">
                                 <button class="accordion-button" type="button" data-bs-toggle="collapse"
                                         data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true"
@@ -96,7 +96,7 @@
             <div th:case="0"><h3 class="fs-2">Не указано</h3></div>
             <div th:case="*">
                 <div class="accordion" id="edu-accordionPanelsStayOpen" th:each="edu : ${resume.educations}">
-                    <div th:if="${edu.getType().equals('EDUCATION')}" class="accordion-item">
+                    <div class="accordion-item">
                         <h2 class="accordion-header" id="edu-panelsStayOpen-headingOne">
                             <button class="accordion-button" type="button" data-bs-toggle="collapse"
                                     data-bs-target="#edu-panelsStayOpen-collapseOne" aria-expanded="true"

@@ -1,16 +1,12 @@
 package by.akulov.java.cvp.repository;
 
 import by.akulov.java.cvp.model.resume.Resume;
+import by.akulov.java.cvp.model.resume.Skill;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
 @Repository
-public interface ResumeRepository extends CrudRepository<Resume, Long> {
+public interface SkillRepository extends CrudRepository<Skill, Long> {
 
-    ArrayList<Resume> findAllByPlatformUser_id(Long id);
-
-    Resume findFirstById(Long id);
-
-
+    void deleteAllByResume_id(Long id);
 }

@@ -2,22 +2,16 @@ package by.akulov.java.cvp.web;
 
 import by.akulov.java.cvp.model.PlatformUser;
 import by.akulov.java.cvp.model.resume.Resume;
-import by.akulov.java.cvp.model.resume.Skill;
-import by.akulov.java.cvp.model.resume.contact.Contact;
-import by.akulov.java.cvp.model.resume.experience.Experience;
-import by.akulov.java.cvp.model.resume.experience.ExperienceType;
 import by.akulov.java.cvp.service.ResumeService;
 import by.akulov.java.cvp.service.UserService;
-import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
-
 import java.util.*;
-import java.util.stream.Collectors;
+
 
 @Controller
 public class ResumeController {

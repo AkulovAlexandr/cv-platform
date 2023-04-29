@@ -2,15 +2,14 @@ package by.akulov.java.cvp.model.resume;
 
 import by.akulov.java.cvp.model.PlatformUser;
 import by.akulov.java.cvp.model.resume.contact.Contact;
+import by.akulov.java.cvp.model.resume.experience.Education;
 import by.akulov.java.cvp.model.resume.experience.Experience;
-import by.akulov.java.cvp.model.resume.experience.ExperienceType;
+import by.akulov.java.cvp.model.resume.experience.Job;
 import jakarta.persistence.*;
 import lombok.Data;
-
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
-import java.util.Set;
+
 
 @Entity
 @Table(name = "resumes")
@@ -26,26 +25,15 @@ public class Resume {
     private String commonInfo;
     @OneToMany(mappedBy = "resume", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private Collection<Skill> skills;
-    @OneToMany(mappedBy = "resume", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "resume", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY, targetEntity = Job.class)
     private Collection<Experience> jobs;
-    @OneToMany(mappedBy = "resume", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "resume", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY, targetEntity = Education.class)
     private Collection<Experience> educations;
     @OneToMany(mappedBy = "resume", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private Collection<Contact> contacts;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private PlatformUser platformUser;
-
-//    public ArrayList<Experience> getExperiencesByType(ExperienceType type) {
-//        if (experiences == null || experiences.size() == 0) {
-//            return new ArrayList<>();
-//        } else {
-//            return new ArrayList<>(this.experiences.stream()
-//                    .filter(exp -> exp.getType().equals(String.valueOf(type)))
-//                    .toList());
-//        }
-//    }
-
 
     @Override
     public boolean equals(Object o) {

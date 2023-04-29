@@ -7,8 +7,11 @@ import lombok.Data;
 import java.util.Objects;
 
 @Entity
+@Table(name = "EXPERIENCES")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "EXP_TYPE")
 @Data
-public class Experience {
+public abstract class Experience {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,7 +20,6 @@ public class Experience {
     private Integer startYear;
     private Integer endYear;
     private String description;
-    private String type;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "resume_id")
     private Resume resume;
@@ -27,12 +29,12 @@ public class Experience {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Experience that = (Experience) o;
-        return Objects.equals(id, that.id) && Objects.equals(title, that.title) && Objects.equals(startYear, that.startYear) && Objects.equals(endYear, that.endYear) && Objects.equals(description, that.description) && Objects.equals(type, that.type);
+        return Objects.equals(id, that.id) && Objects.equals(title, that.title) && Objects.equals(startYear, that.startYear) && Objects.equals(endYear, that.endYear) && Objects.equals(description, that.description);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, startYear, endYear, description, type);
+        return Objects.hash(id, title, startYear, endYear, description);
     }
 
     @Override
@@ -43,7 +45,6 @@ public class Experience {
                 ", startYear=" + startYear +
                 ", endYear=" + endYear +
                 ", description='" + description + '\'' +
-                ", type='" + type + '\'' +
                 ", resume_id=" + resume.getId() +
                 '}';
     }
