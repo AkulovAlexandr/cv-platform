@@ -8,6 +8,8 @@ import by.akulov.java.cvp.model.resume.contact.Contact;
 import by.akulov.java.cvp.model.resume.contact.ContactType;
 import by.akulov.java.cvp.model.resume.experience.Experience;
 import by.akulov.java.cvp.model.resume.experience.ExperienceType;
+import by.akulov.java.cvp.service.ResumeService;
+import by.akulov.java.cvp.service.ResumeServiceImpl;
 import by.akulov.java.cvp.service.UserService;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,15 +29,24 @@ public class UserController {
     private UserService userService;
 
     @Autowired
+    private ResumeService resumeService;
+
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
     @PostConstruct
     public void init() {
 
         PlatformUser user = new PlatformUser();
+        user.setRole(String.valueOf(Roles.ROLE_USER));
+        user.setLogin("user");
+        user.setPassword(passwordEncoder.encode("user"));
+        user.setName("Александр");
+        user.setSurname("Акулов");
+        userService.save(user);
 
-        Collection<Resume> resumes = new ArrayList<>();
-        for (int i = 0; i < 9 ; i++) {
+        for (int i = 0; i < 3 ; i++) {
             Resume resume = new Resume();
             resume.setPlatformUser(user);
 
@@ -146,18 +157,9 @@ public class UserController {
             resume.setSkills(skills);
             resume.setJobs(jobs);
             resume.setEducations(edus);
-            resumes.add(resume);
+            resume.setPlatformUser(user);
+            resumeService.save(resume);
         }
-
-
-        user.setRole(String.valueOf(Roles.ROLE_USER));
-        user.setLogin("user");
-        user.setPassword(passwordEncoder.encode("user"));
-        user.setName("Александр");
-        user.setSurname("Акулов");
-        user.setResume(resumes);
-
-        userService.save(user);
 
     }
 

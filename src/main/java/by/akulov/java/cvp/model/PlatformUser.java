@@ -23,19 +23,19 @@ public class PlatformUser {
     private String password;
     private String role;
     @OneToMany(mappedBy = "platformUser", cascade = CascadeType.PERSIST)
-    private Collection<Resume> resume;
+    private Collection<Resume> resumes;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         PlatformUser platformUser = (PlatformUser) o;
-        return Objects.equals(id, platformUser.id) && Objects.equals(name, platformUser.name) && Objects.equals(surname, platformUser.surname) && Objects.equals(login, platformUser.login) && Objects.equals(password, platformUser.password) && Objects.equals(role, platformUser.role) && Objects.equals(resume, platformUser.resume);
+        return Objects.equals(id, platformUser.id) && Objects.equals(name, platformUser.name) && Objects.equals(surname, platformUser.surname) && Objects.equals(login, platformUser.login) && Objects.equals(password, platformUser.password) && Objects.equals(role, platformUser.role) && Objects.equals(resumes, platformUser.resumes);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, surname, login, password, role, resume);
+        return Objects.hash(id, name, surname, login, password, role, resumes);
     }
 
     @Override

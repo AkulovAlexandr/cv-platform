@@ -7,7 +7,9 @@ import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.Where;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 
 
@@ -23,19 +25,26 @@ public class Resume {
     private String title;
     @Column(name = "common", columnDefinition = "TEXT(1000) default NULL")
     private String commonInfo;
-    @OneToMany(mappedBy = "resume", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "resume")
     private Collection<Skill> skills;
-    @OneToMany(mappedBy = "resume", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "resume")
     @Where(clause = "type = 'JOB'")
     private Collection<Experience> jobs;
-    @OneToMany(mappedBy = "resume", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "resume")
     @Where(clause = "type = 'EDUCATION'")
     private Collection<Experience> educations;
-    @OneToMany(mappedBy = "resume", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "resume")
     private Collection<Contact> contacts;
     @ManyToOne
     @JoinColumn(name = "user_id")
     private PlatformUser platformUser;
+
+    public Collection<Experience> getExperiences() {
+        List<Experience> experiences = new ArrayList<>();
+        experiences.addAll(jobs);
+        experiences.addAll(educations);
+        return experiences;
+    }
 
     @Override
     public boolean equals(Object o) {

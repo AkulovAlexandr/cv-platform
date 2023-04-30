@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
+
 import java.util.*;
 
 
@@ -33,43 +34,42 @@ public class ResumeController {
                 model.addAttribute("resume", resume);
                 return "cv";
             } else {
-                model.addAttribute("message", "Ошибка открытия резюме. Доступ запрещен");
-                return "forward:/cv/list/";
+//                model.addAttribute("message", "Ошибка открытия резюме. Доступ запрещен");
+                return "404";
             }
         }
-        model.addAttribute("message", "Ошибка открытия резюме");
-        return "forward:/cv/list/";
-    }
-
-    @GetMapping("/cv/delete/{id}/")
-    public String deleteResume(@PathVariable Long id, Model model) {
-        String login = SecurityContextHolder.getContext().getAuthentication().getName();
-        PlatformUser user = userService.findUserByLogin(login);
-        ArrayList<Resume> resumes = resumeService.findAllByUserId(user.getId());
-        for (Resume resume : resumes) {
-            Long resumeID = resume.getId();
-            if ((id.equals(resumeID))) {
-                resumeService.deleteResumeById(id);
-                model.addAttribute("message", "Резюме удалено!");
-                return "redirect:/cv/list/";
-            }
-        }
-        model.addAttribute("message", "Нет доступа к запрашиваемому резюме!");
-        return "redirect:/cv/list/";
+//        model.addAttribute("message", "Ошибка открытия резюме");
+        return "404";
     }
 
     @GetMapping("/cv/list/")
     public String getListOfResumes(Model model) {
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
         PlatformUser platformUser = userService.findUserByLogin(login);
-        ArrayList<Resume> resumes = new ArrayList<>(platformUser.getResume());
+        ArrayList<Resume> resumes = new ArrayList<>(platformUser.getResumes());
         model.addAttribute("resumes", resumes);
-        model.addAttribute("resumesQuantity", resumes.size());
         if (model.getAttribute("message") == null) {
             model.addAttribute("message", "");
         }
         return "cv-list";
     }
+
+    @GetMapping("/cv/delete/{id}/")
+    public String deleteResume(@PathVariable Long id, Model model) {
+        String login = SecurityContextHolder.getContext().getAuthentication().getName();
+        PlatformUser user = userService.findUserByLogin(login);
+        Resume resume = resumeService.findById(id);
+        if (null != resume && resume.getPlatformUser().equals(user)) {
+            resumeService.deleteResume(resume);
+            model.addAttribute("message", "Резюме удалено!");
+            model.addAttribute("resumes", user.getResumes());
+            return "cv-list";
+        }
+        model.addAttribute("resumes", user.getResumes());
+        model.addAttribute("message", "Нет доступа к запрашиваемому резюме!");
+        return "cv-list";
+    }
+
 
     @GetMapping(value = {"/cv/edit/", "/cv/edit/{id}/"})
     public String getCreatePage(@PathVariable(required = false) Long id, Model model) {
@@ -82,46 +82,37 @@ public class ResumeController {
             return "cv-edit";
         } else {
             Resume resume = resumeService.findById(id);
-            if (resume != null) {
+            if (null != resume) {
                 platformUser = resume.getPlatformUser();
                 if (platformUser.getLogin().equals(login)) {
                     model.addAttribute("resumeOwner", platformUser);
                     model.addAttribute("resume", resume);
                     return "cv-edit";
                 } else {
-                    model.addAttribute("message", "Ошибка открытия резюме. Доступ запрещен");
-                    return "forward:/cv/list/";
+//                    model.addAttribute("message", "Ошибка открытия резюме. Доступ запрещен");
+                    return "404";
                 }
             }
-            model.addAttribute("message", "Ошибка открытия резюме.");
-            return "forward:/cv/list/";
+//            model.addAttribute("message", "Ошибка открытия резюме.");
+            return "404";
         }
     }
 
-    @PostMapping(value = {"/cv/edit/", "/cv/edit/{id}/"})
-    public String saveResume(@PathVariable(required = false) Long id, @ModelAttribute Resume resume, Model model, WebRequest request) {
+    @PostMapping(value = {"/cv/edit/"})
+    public String saveResume(@RequestParam(required = false) Long id, @ModelAttribute Resume resume, Model model, WebRequest request) {
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
-        PlatformUser platformUser = userService.findUserByLogin(login);
+        PlatformUser user = userService.findUserByLogin(login);
         Map<String, String[]> parameterMap = request.getParameterMap();
+        resume.setPlatformUser(user);
         if (null == id) {
-            resume.setPlatformUser(platformUser);
-            if (resumeService.save(resumeService.parametersMappingToResume(parameterMap, resume)) != null) {
-                model.addAttribute("message", "Резюме сохранено!");
-            } else {
-                model.addAttribute("message", "Не сохранилось");
-            }
+            resumeService.save(resumeService.parametersMappingToResume(parameterMap, resume));
+            model.addAttribute("message", "Резюме сохранено!");
         } else {
-            Resume resumeToUpdate = resumeService.findById(id);
-            if (resumeToUpdate != null && resumeToUpdate.getPlatformUser().equals(platformUser)) {
-                resumeToUpdate.setTitle(resume.getTitle());
-                resumeToUpdate.setCommonInfo(resume.getCommonInfo());
-                resumeService.save(resumeService.parametersMappingToResume(parameterMap, resumeToUpdate));
-                model.addAttribute("message", "Резюме сохранено");
-            } else {
-                model.addAttribute("message", "Резюме не найдено");
-            }
+            resumeService.update(resumeService.parametersMappingToResume(parameterMap, resume));
+            model.addAttribute("message", "Резюме обновлено!");
         }
-        return "redirect:/cv/list/";
+        model.addAttribute("resumes", user.getResumes());
+        return "cv-list";
     }
 
     @ModelAttribute("userCredentials")

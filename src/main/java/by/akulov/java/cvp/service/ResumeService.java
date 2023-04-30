@@ -8,12 +8,9 @@ import java.util.Map;
 public interface ResumeService {
 
     Resume save(Resume resume);
-
-    ArrayList<Resume> findAllByUserId(Long id);
-
+    Resume update(Resume resume);
     Resume findById(Long id);
-
-    void deleteResumeById(Long id);
-
+    void deleteResume(Resume resume);
     Resume parametersMappingToResume(Map<String, String[]> parameterMap, Resume resume);
+
 }
