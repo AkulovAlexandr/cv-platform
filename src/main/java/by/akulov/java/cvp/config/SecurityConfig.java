@@ -48,7 +48,7 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**")).permitAll()
-                        .requestMatchers("/", "/images/**", "/js/**", "/css/**").permitAll()
+                        .requestMatchers("/", "/images/**", "/js/**", "/css/**", "/upload/profile/**", "/public/**", "/register/**").permitAll()
                         .requestMatchers("/cv/", "/cv/**").hasAnyRole("USER", "ADMIN")
                 )
                 .formLogin().permitAll()

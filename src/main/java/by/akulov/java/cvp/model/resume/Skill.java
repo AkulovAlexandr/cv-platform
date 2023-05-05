@@ -39,7 +39,6 @@ public class Skill {
                 "id=" + id +
                 ", title='" + title + '\'' +
                 ", percent=" + percent +
-                ", resume_id=" + resume.getId() +
                 '}';
     }
 }

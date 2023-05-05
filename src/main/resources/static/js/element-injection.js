@@ -44,22 +44,22 @@ addJobBtn.onclick = (e) => {
                                 <input type="hidden" name="jobId${jobsCounter}">
                                 <label for="jobTitle${jobsCounter}" class="form-label d-flex justify-content-between">Компания <button type="button" class="closeButton btn btn-sm btn-outline-danger">X</button></label>
                                 <input name="jobTitle${jobsCounter}" type="text" class="form-control mb-3" id="jobTitle${jobsCounter}"
-                                       placeholder="Например: ОАО &#34;Рога и копыта&#34;" value="" required>
+                                       placeholder="Например: ОАО &#34;Компания&#34;" value="" required>
                                 <div class="row">
                                     <div class="col-6">
                                         <label for="jobYearStart${jobsCounter}" class="form-label">C</label>
                                         <input name="jobYearStart${jobsCounter}" type="number" min="2010" max="2023" class="form-control mb-3" id="jobYearStart${jobsCounter}"
-                                               placeholder="2020" value="" required>
+                                               placeholder="Год начала работы" value="" required>
                                     </div>
                                     <div class="col-6">
                                         <label for="jobYearEnd${jobsCounter}" class="form-label">По</label>
                                         <input name="jobYearEnd${jobsCounter}" type="number" min="2010" max="2023" class="form-control mb-3" id="jobYearEnd${jobsCounter}"
-                                               placeholder="2023" value="" required>
+                                               placeholder="Год окончания работы" value="" required>
                                     </div>
                                 </div>
                                 <label for="jobDescription${jobsCounter}" class="form-label">Опишите обязанности</label>
                                 <textarea  name="jobDescription${jobsCounter}" maxlength="1000" class="form-control mb-3" id="jobDescription${jobsCounter}"
-                                          placeholder="Например: &#34;Специалист по работе с клиентами. Эффективный менеджер в галстуке и рубашке. Выполнял планы продаж и в ус не дул&#34;"
+                                          placeholder="Подробно опишите, чем занимались на данной работе, какую должность занимали, какие были достижения"
                                           required></textarea>
                             </div>`);
         jobsCounter++;
@@ -83,12 +83,12 @@ addEduBtn.onclick = (e) => {
                                     <div class="col-6">
                                         <label for="eduYearStart${eduCounter}" class="form-label">C</label>
                                         <input name="eduYearStart${eduCounter}" type="number" min="2010" max="2023" class="form-control mb-3" id="eduYearStart${eduCounter}"
-                                               placeholder="2020" value="" required>
+                                               placeholder="Год начала учебы" value="" required>
                                     </div>
                                     <div class="col-6">
                                         <label for="eduYearEnd${eduCounter}" class="form-label">По</label>
                                         <input name="eduYearEnd${eduCounter}" type="number" min="2010" max="2023" class="form-control mb-3" id="eduYearEnd${eduCounter}"
-                                               placeholder="2023" value="" required>
+                                               placeholder="Год окончания учебы" value="" required>
                                     </div>
                                 </div>
                                 <label for="eduDescription${eduCounter}" class="form-label">Описание</label>

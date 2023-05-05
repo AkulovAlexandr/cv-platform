@@ -11,8 +11,13 @@
 
 <div th:replace="~{header}"></div>
 
-<main class="d-flex flex-column" id="main">
-    <h1 class="display-5 fw-normal text-dark text-xxl-center">Ошибка 404</h1>
+<main id="main">
+    <div id="errorContainer">
+        <div id="errorBlock">
+            <h1>Ошибка 404</h1>
+            <a class="btn btn-outline-primary" th:href="@{/}">На главную</a>
+        </div>
+    </div>
 </main>
 
 <script src="/js/bootstrap.bundle.min.js"></script>

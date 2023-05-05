@@ -1,0 +1,22 @@
+spring:
+  profiles:
+    active: test
+
+  thymeleaf:
+    cache: false
+
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: create
+
+  sql:
+    init:
+      mode: always
+
+server:
+  servlet:
+    context-path: /
+
+upload:
+  profile-path: "/upload/profile/"

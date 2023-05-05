@@ -14,18 +14,36 @@
 <main>
 
     <div class="container" id="cv-edit-block">
-        <div class="py-5 text-center">
-            <img class="d-block mx-auto mb-4" src="../assets/brand/bootstrap-logo.svg" alt="" width="72" height="57">
-            <h2 th:text="${resumeOwner.name} + ' ' + ${resumeOwner.surname}"></h2>
-            <p class="lead">Below is an example form built entirely with Bootstrap’s form controls. Each required form
-                group has a validation state that can be triggered by attempting to submit the form without completing
-                it.</p>
+        <div class="py-5 text-start ">
+            <h1 th:text="${resumeOwner.name} + ' ' + ${resumeOwner.surname}"></h1>
+            <div th:if="${resume.id}">
+            <img th:if="${resume.photo}" th:src="@{/upload/profile/{photo}(photo=*{photo.name})}"
+                 id="frame"
+                 class="img-fluid bd-placeholder-img rounded float-start mx-3"
+                 alt="" width="300" height="500">
+            <img th:if="!${resume.photo}" id="frame" src="/images/noimage_photo.png"
+                 class="img-fluid bd-placeholder-img rounded float-start mx-3"
+                 alt="" width="200" height="200">
+            <form th:action="@{/upload/profile/}" method="post" enctype="multipart/form-data" class="mb-3">
+                <input th:if="${photo.id}" type="hidden" th:field="*{photo.id}" th:value="${photo.id}">
+                <input th:if="!${photo.id}" type="hidden" th:field="${photo.id}" value="">
+                <input type="hidden" name="resumeId" th:value="${resume.id}">
+                <input class="form-control form-control-sm" type="file" name="photo" onchange="preview()" required>
+                <input type="submit" class="btn btn-primary" value="Загрузить новое фото">
+            </form>
+            <p class="lead">Функция фотографии в резюме — расположить к себе того, кто будет смотреть резюме,
+                визуализировать свой имидж профессионала.
+                Очень важно правильно подобрать фотографию: она должна быть уместной, а выражение лица на ней
+                должно быть доброжелательным.</p>
+            </div>
         </div>
 
 
         <div class="mb-3">
             <h3 class="mb-4">Отредактируйте резюме</h3>
             <form th:action="@{/cv/edit/}" th:object="${resume}" method="post" class="needs-validation" novalidate>
+                <input th:if="${resume.photo}" type="hidden" th:field="${resume.photo.id}" th:value="${resume.photo.id}">
+                <input th:if="${resume.photo}" type="hidden" th:field="${resume.photo.name}" th:value="${resume.photo.name}">
                 <input type="hidden" th:field="*{id}" name="id"/>
                 <div class="row g-3">
                     <div class="col-12 mb-4">
@@ -34,9 +52,6 @@
                         <input th:field="*{title}" name="title" type="text" class="form-control" id="title"
                                placeholder="Например: &#34;JAVA - разработчик, QA - инженер&#34;"
                                th:value="${resume.title}" required>
-                        <div class="invalid-feedback">
-                            Valid first name is required.
-                        </div>
                     </div>
 
                     <div class="col-12 mb-4">
@@ -44,11 +59,8 @@
                         <hr class="m-0 mb-3">
                         <textarea th:field="*{commonInfo}" name="commonInfo" maxlength="1000" class="form-control"
                                   id="commonInfo"
-                                  placeholder="Например: &#34;Опыт разработки - 5 лет. Знаю иностранные языки. Вышиваю крестиком. Есть кот.&#34;"
+                                  placeholder="Например: &#34;Опыт разработки - 5 лет. Знаю иностранные языки. Увлекаюсь игрой на гитаре. Есть кот.&#34;"
                                   th:value="${resume.commonInfo}" required></textarea>
-                        <div class="invalid-feedback">
-                            Valid first name is required.
-                        </div>
                     </div>
 
                     <div class="col-12 mb-5">
@@ -57,7 +69,8 @@
                         <div id="skillsBlock">
                             <div th:each="skill, iteration : ${resume.skills}">
                                 <div class="skillItem p-3 mb-3">
-                                    <input type="hidden" th:name="'skillId' + ${iteration.index + 1}" th:value="${skill.id}">
+                                    <input type="hidden" th:name="'skillId' + ${iteration.index + 1}"
+                                           th:value="${skill.id}">
                                     <label th:for="'skillRange' + ${iteration.index + 1}"
                                            class="form-label d-flex justify-content-between"><input
                                             th:name="'skillTitle' + ${iteration.index + 1}"
@@ -82,7 +95,8 @@
                         <div id="jobBlock">
                             <div th:each="job, iteration : ${resume.jobs}">
                                 <div class="jobItem p-3 mb-3">
-                                    <input type="hidden" th:name="'jobId' + ${iteration.index + 1}" th:value="${job.id}">
+                                    <input type="hidden" th:name="'jobId' + ${iteration.index + 1}"
+                                           th:value="${job.id}">
                                     <label th:for="'jobTitle' + ${iteration.index + 1}"
                                            class="form-label d-flex justify-content-between">Компания
                                         <button type="button" class="closeButton btn btn-sm btn-outline-danger">X
@@ -90,7 +104,7 @@
                                     </label>
                                     <input th:name="'jobTitle' + ${iteration.index + 1}" type="text"
                                            class="form-control mb-3" id="jobTitle1"
-                                           placeholder="Например: ОАО &#34;Рога и копыта&#34;" th:value="${job.title}"
+                                           placeholder="Например: ОАО &#34;Комания&#34;" th:value="${job.title}"
                                            required>
                                     <div class="row">
                                         <div class="col-6">
@@ -100,7 +114,7 @@
                                                    min="2010" max="2023"
                                                    class="form-control mb-3"
                                                    th:id="'jobYearStart' + ${iteration.index + 1}"
-                                                   placeholder="2020" th:value="${job.startYear}" required>
+                                                   placeholder="Год начала работы" th:value="${job.startYear}" required>
                                         </div>
                                         <div class="col-6">
                                             <label th:for="'jobYearEnd' + ${iteration.index + 1}"
@@ -110,7 +124,7 @@
                                                    max="2023"
                                                    class="form-control mb-3"
                                                    th:id="'jobYearEnd' + ${iteration.index + 1}"
-                                                   placeholder="2023" th:value="${job.endYear}" required>
+                                                   placeholder="Год окончания работы" th:value="${job.endYear}" required>
                                         </div>
                                     </div>
                                     <label th:for="'jobDescription' + ${iteration.index + 1}" class="form-label">Опишите
@@ -118,7 +132,7 @@
                                     <textarea th:name="'jobDescription' + ${iteration.index + 1}" maxlength="1000"
                                               class="form-control mb-3"
                                               th:id="'jobDescription' + ${iteration.index + 1}"
-                                              placeholder="Например: &#34;Специалист по работе с клиентами. Эффективный менеджер в галстуке и рубашке. Выполнял планы продаж и в ус не дул&#34;"
+                                              placeholder="Подробно опишите, чем занимались на данной работе, какую должность занимали, какие были достижения"
                                               th:text="${job.description}" required></textarea>
                                 </div>
                             </div>
@@ -132,7 +146,8 @@
                         <div id="eduBlock">
                             <div th:each="edu, iteration : ${resume.educations}">
                                 <div class="eduItem p-3 mb-3">
-                                    <input type="hidden" th:name="'eduId' + ${iteration.index + 1}" th:value="${edu.id}">
+                                    <input type="hidden" th:name="'eduId' + ${iteration.index + 1}"
+                                           th:value="${edu.id}">
                                     <label th:for="'eduTitle' + ${iteration.index + 1}"
                                            class="form-label d-flex justify-content-between">Учебное
                                         заведение
@@ -152,7 +167,7 @@
                                                    min="2010" max="2023"
                                                    class="form-control mb-3"
                                                    th:id="'eduYearStart' + ${iteration.index + 1}"
-                                                   placeholder="2020" th:value="${edu.startYear}" required>
+                                                   placeholder="Год начала учебы" th:value="${edu.startYear}" required>
                                         </div>
                                         <div class="col-6">
                                             <label th:for="'eduYearEnd' + ${iteration.index + 1}"
@@ -161,7 +176,7 @@
                                                    min="2010" max="2023"
                                                    class="form-control mb-3"
                                                    th:id="'eduYearEnd' + ${iteration.index + 1}"
-                                                   placeholder="2023" th:value="${edu.endYear}" required>
+                                                   placeholder="Год окончания учебы" th:value="${edu.endYear}" required>
                                         </div>
                                     </div>
                                     <label th:for="'eduDescription' + ${iteration.index + 1}" class="form-label">Описание</label>
@@ -182,7 +197,8 @@
                         <div id="contactBlock">
                             <div th:each="contact, iteration : ${resume.contacts}">
                                 <div class="contactItem p-3 mb-3">
-                                    <input type="hidden" th:name="'contactId' + ${iteration.index + 1}" th:value="${contact.id}">
+                                    <input type="hidden" th:name="'contactId' + ${iteration.index + 1}"
+                                           th:value="${contact.id}">
                                     <label th:for="'contactData' + ${iteration.index + 1}"
                                            class="form-label d-flex justify-content-between">Контакт
                                         <button type="button" class="closeButton btn btn-sm btn-outline-danger">X
@@ -222,5 +238,11 @@
 <script src="/js/bootstrap.bundle.min.js"></script>
 <script src="/js/form-validation.js"></script>
 <script src="/js/element-injection.js"></script>
+<script>
+    function preview() {
+        frame.src = URL.createObjectURL(event.target.files[0]);
+        // document.getElementById('photoFileName').value = event.target.files[0].name;
+    }
+</script>
 </body>
 </html>

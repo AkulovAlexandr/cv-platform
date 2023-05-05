@@ -39,7 +39,6 @@ public class Contact {
                 "id=" + id +
                 ", data='" + data + '\'' +
                 ", type='" + type + '\'' +
-                ", resume_id=" + resume.getId() +
                 '}';
     }
 }

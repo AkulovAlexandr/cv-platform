@@ -1,16 +1,17 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="ru">
-<nav th:fragment="header" id="nav-header" class="navbar navbar-expand-md navbar-dark sticky-top fixed-top">
+<nav th:if="!${isPublished}" th:fragment="header" id="nav-header"
+     class="navbar navbar-expand-md navbar-dark sticky-top fixed-top">
     <div id="nav-container" class="container-fluid">
         <a id="nav-brand" class="navbar-brand" th:href="@{/}">
             <img src="/images/logo.png" width="100" height="54" class="d-inline-block align-top" alt="" loading="lazy">
         </a>
-        <button class="navbar-toggler btn btn-secondary" type="button" data-bs-toggle="collapse"
+        <button th:if="!${hasError}" class="navbar-toggler btn btn-secondary" type="button" data-bs-toggle="collapse"
                 data-bs-target="#navbarCollapse"
                 aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarCollapse">
+        <div th:if="!${hasError}" class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav me-auto mb-2 mb-md-0">
                 <li class="nav-item">
                     <a class="nav-link active" aria-current="page" th:href="@{/}">Главная</a>
@@ -19,14 +20,15 @@
                     <a class="nav-link active" th:href="@{/cv/edit/}">Создать резюме</a>
                 </li>
             </ul>
-            <ul th:switch="${userCredentials}" class="navbar-nav d-flex justify-content-sm-between" id="nav">
+            <ul th:if="!${hasError}" th:switch="${userCredentials}" class="navbar-nav d-flex justify-content-sm-between"
+                id="nav">
                 <li th:case="anon" class="nav-item">
                     <a class="nav-link" th:href="@{/login}">Войти</a>
                 </li>
                 <li th:case="*" class="nav-item dropdown " id="nav-userName">
                     <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"
                        th:text="${userCredentials}"></a>
-                    <ul class="dropdown-menu ">
+                    <ul id="headerDropDown" class="dropdown-menu">
                         <li><a class="dropdown-item" th:href="@{/cv/list/}">Мои резюме</a></li>
                         <li><a class="dropdown-item" href="#">Настройки</a></li>
                         <li>

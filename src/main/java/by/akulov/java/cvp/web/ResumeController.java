@@ -1,10 +1,10 @@
 package by.akulov.java.cvp.web;
 
+import by.akulov.java.cvp.model.Photo;
 import by.akulov.java.cvp.model.PlatformUser;
 import by.akulov.java.cvp.model.resume.Resume;
 import by.akulov.java.cvp.service.ResumeService;
 import by.akulov.java.cvp.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,11 +17,14 @@ import java.util.*;
 @Controller
 public class ResumeController {
 
-    @Autowired
-    private ResumeService resumeService;
+    private final ResumeService resumeService;
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
+
+    public ResumeController(ResumeService resumeService, UserService userService) {
+        this.resumeService = resumeService;
+        this.userService = userService;
+    }
 
     @GetMapping("/cv/{id}/")
     public String getResumePage(@PathVariable Long id, Model model) {
@@ -34,11 +37,9 @@ public class ResumeController {
                 model.addAttribute("resume", resume);
                 return "cv";
             } else {
-//                model.addAttribute("message", "Ошибка открытия резюме. Доступ запрещен");
                 return "404";
             }
         }
-//        model.addAttribute("message", "Ошибка открытия резюме");
         return "404";
     }
 
@@ -79,6 +80,7 @@ public class ResumeController {
             platformUser = userService.findUserByLogin(login);
             model.addAttribute("resumeOwner", platformUser);
             model.addAttribute("resume", new Resume());
+            model.addAttribute("photo", new Photo());
             return "cv-edit";
         } else {
             Resume resume = resumeService.findById(id);
@@ -87,13 +89,12 @@ public class ResumeController {
                 if (platformUser.getLogin().equals(login)) {
                     model.addAttribute("resumeOwner", platformUser);
                     model.addAttribute("resume", resume);
+                    model.addAttribute("photo", resume.getPhoto() == null ? new Photo() : resume.getPhoto());
                     return "cv-edit";
                 } else {
-//                    model.addAttribute("message", "Ошибка открытия резюме. Доступ запрещен");
                     return "404";
                 }
             }
-//            model.addAttribute("message", "Ошибка открытия резюме.");
             return "404";
         }
     }
@@ -105,8 +106,9 @@ public class ResumeController {
         Map<String, String[]> parameterMap = request.getParameterMap();
         resume.setPlatformUser(user);
         if (null == id) {
-            resumeService.save(resumeService.parametersMappingToResume(parameterMap, resume));
-            model.addAttribute("message", "Резюме сохранено!");
+            Resume saved = resumeService.save(resumeService.parametersMappingToResume(parameterMap, resume));
+            model.addAttribute("resumeId", saved.getId());
+            return "photo-add";
         } else {
             resumeService.update(resumeService.parametersMappingToResume(parameterMap, resume));
             model.addAttribute("message", "Резюме обновлено!");
@@ -114,6 +116,26 @@ public class ResumeController {
         model.addAttribute("resumes", user.getResumes());
         return "cv-list";
     }
+
+    @PostMapping("/cv/{id}/")
+    public String publishResume(@PathVariable Long id, @RequestParam boolean published, Model model) {
+        String login = SecurityContextHolder.getContext().getAuthentication().getName();
+        Resume resume = resumeService.findById(id);
+        if (resume != null) {
+            PlatformUser resumePlatformUser = resume.getPlatformUser();
+            if (resumePlatformUser.getLogin().equals(login)) {
+                resume.setPublished(published);
+                resumeService.save(resume);
+                model.addAttribute("message", "Резюме опубликовано!");
+                model.addAttribute("resumes", resumePlatformUser.getResumes());
+                return "cv-list";
+            } else {
+                return "404";
+            }
+        }
+        return "404";
+    }
+
 
     @ModelAttribute("userCredentials")
     public String populateUserCredentials() {

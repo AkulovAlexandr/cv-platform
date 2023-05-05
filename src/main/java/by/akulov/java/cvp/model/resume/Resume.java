@@ -1,5 +1,6 @@
 package by.akulov.java.cvp.model.resume;
 
+import by.akulov.java.cvp.model.Photo;
 import by.akulov.java.cvp.model.PlatformUser;
 import by.akulov.java.cvp.model.resume.contact.Contact;
 import by.akulov.java.cvp.model.resume.experience.Experience;
@@ -25,19 +26,24 @@ public class Resume {
     private String title;
     @Column(name = "common", columnDefinition = "TEXT(1000) default NULL")
     private String commonInfo;
-    @OneToMany(mappedBy = "resume")
+    @OneToOne(fetch = FetchType.EAGER)
+    private Photo photo;
+    @OneToMany(mappedBy = "resume", fetch = FetchType.EAGER)
     private Collection<Skill> skills;
-    @OneToMany(mappedBy = "resume")
+    @OneToMany(mappedBy = "resume", fetch = FetchType.EAGER)
     @Where(clause = "type = 'JOB'")
     private Collection<Experience> jobs;
-    @OneToMany(mappedBy = "resume")
+    @OneToMany(mappedBy = "resume", fetch = FetchType.EAGER)
     @Where(clause = "type = 'EDUCATION'")
     private Collection<Experience> educations;
-    @OneToMany(mappedBy = "resume")
+    @OneToMany(mappedBy = "resume", fetch = FetchType.EAGER)
     private Collection<Contact> contacts;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private PlatformUser platformUser;
+    private boolean published;
+
+
 
     public Collection<Experience> getExperiences() {
         List<Experience> experiences = new ArrayList<>();
@@ -51,12 +57,12 @@ public class Resume {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Resume resume = (Resume) o;
-        return Objects.equals(id, resume.id) && Objects.equals(title, resume.title) && Objects.equals(commonInfo, resume.commonInfo) && Objects.equals(platformUser, resume.platformUser);
+        return Objects.equals(id, resume.id) && Objects.equals(title, resume.title) && Objects.equals(commonInfo, resume.commonInfo) && Objects.equals(photo, resume.photo);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, commonInfo, platformUser);
+        return Objects.hash(id, title, commonInfo, photo);
     }
 
     @Override
@@ -65,7 +71,7 @@ public class Resume {
                 "id=" + id +
                 ", title='" + title + '\'' +
                 ", commonInfo='" + commonInfo + '\'' +
-                ", platformUser=" + platformUser +
+                ", photo=" + photo +
                 '}';
     }
 }

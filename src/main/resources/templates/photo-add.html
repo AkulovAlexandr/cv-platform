@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${userCredentials} + ' - редактор резюме'"></title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+
+<div th:replace="~{header}"></div>
+
+<main>
+
+    <div class="container" id="cv-edit-block">
+        <div class="py-5 text-start ">
+            <h3>Почти готово! Осталось добавить фото</h3>
+            <img id="frame" src="/images/noimage_photo.png"
+                 class="img-fluid bd-placeholder-img rounded float-start mx-3"
+                 alt="" width="200" height="200">
+            <p class="lead">Функция фотографии в резюме — расположить к себе того, кто будет смотреть резюме,
+                визуализировать свой имидж профессионала.
+                Очень важно правильно подобрать фотографию: она должна быть уместной, а выражение лица на ней
+                должно быть доброжелательным.</p>
+            <form th:action="@{/upload/profile/}" method="post" enctype="multipart/form-data" class="mb-3">
+                <input type="hidden" name="resumeId" th:value="${resumeId}">
+                <p class="lead">Выберите файл в формате .jpg, .png или .gif. Размер файла не должен первышать 1.5 Мб</p>
+                <input class="form-control form-control-sm" type="file" name="photo" onchange="preview()" required>
+                <input type="submit" class="btn btn-primary" value="Добавить фото">
+                <a th:href="@{/cv/list/}" class="btn btn-danger">Не добавлять</a>
+            </form>
+
+        </div>
+    </div>
+
+
+</main>
+
+<div th:replace="~{footer}"></div>
+
+<script src="/js/bootstrap.bundle.min.js"></script>
+<script src="/js/form-validation.js"></script>
+<script src="/js/element-injection.js"></script>
+<script>
+    function preview() {
+        frame.src = URL.createObjectURL(event.target.files[0]);
+    }
+</script>
+</body>
+</html>

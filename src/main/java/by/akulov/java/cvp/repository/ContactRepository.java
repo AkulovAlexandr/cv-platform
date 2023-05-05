@@ -7,6 +7,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ContactRepository extends CrudRepository<Contact, Long> {
-
     void deleteAllByResume_Id(Long id);
 }

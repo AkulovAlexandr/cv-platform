@@ -44,7 +44,6 @@ public class Experience {
                 ", startYear=" + startYear +
                 ", endYear=" + endYear +
                 ", description='" + description + '\'' +
-                ", resume_id=" + resume.getId() +
                 '}';
     }
 }
