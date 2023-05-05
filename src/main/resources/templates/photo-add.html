@@ -14,27 +14,56 @@
 <main>
 
     <div class="container" id="cv-edit-block">
-        <div class="py-5 text-start ">
+        <div class="p-3 p-sm-5 text-start d-inline-block bg-white rounded-3 mt-5">
             <h3>Почти готово! Осталось добавить фото</h3>
-            <img id="frame" src="/images/noimage_photo.png"
-                 class="img-fluid bd-placeholder-img rounded float-start mx-3"
-                 alt="" width="200" height="200">
+            <img id="frame1" src="/images/noimage_photo.png"
+                 class="mx-md-auto bd-placeholder-img img-thumbnail img-fluid rounded"
+                 alt="" width="400" height="400">
+            <br>
+            <div class="btn-group mt-3" role="group">
+                <a type="button" class="btn btn-secondary mb-5" data-bs-toggle="modal"
+                        data-bs-target="#exampleModal">
+                    Загрузить новое фото
+                </a>
+                <a th:href="@{/cv/list/}" class="btn btn-danger" style="max-height: 38px;">Позже</a>
+            </div>
             <p class="lead">Функция фотографии в резюме — расположить к себе того, кто будет смотреть резюме,
                 визуализировать свой имидж профессионала.
                 Очень важно правильно подобрать фотографию: она должна быть уместной, а выражение лица на ней
                 должно быть доброжелательным.</p>
-            <form th:action="@{/upload/profile/}" method="post" enctype="multipart/form-data" class="mb-3">
-                <input type="hidden" name="resumeId" th:value="${resumeId}">
-                <p class="lead">Выберите файл в формате .jpg, .png или .gif. Размер файла не должен первышать 1.5 Мб</p>
-                <input class="form-control form-control-sm" type="file" name="photo" onchange="preview()" required>
-                <input type="submit" class="btn btn-primary" value="Добавить фото">
-                <a th:href="@{/cv/list/}" class="btn btn-danger">Не добавлять</a>
-            </form>
-
         </div>
     </div>
 
-
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Загрузка фото</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <img id="frame" src="/images/noimage_photo.png"
+                         class="img-fluid bd-placeholder-img rounded mb-3"
+                         alt="" width="200" height="200">
+                    <form th:action="@{/upload/profile/}" method="post" id="savePhoto" enctype="multipart/form-data"
+                          class="mb-3">
+                        <input type="hidden" name="resumeId" th:value="${resumeId}">
+                        <p class="lead">Выберите файл в формате .jpg, .png или .gif. Размер файла не должен первышать
+                            1.5 Мб</p>
+                        <input class="form-control form-control-sm" type="file" name="photo" onchange="preview()"
+                               required>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                    <input form="savePhoto" type="submit" class="btn btn-primary" value="Добавить фото">
+                </div>
+            </div>
+        </div>
+    </div>
 </main>
 
 <div th:replace="~{footer}"></div>

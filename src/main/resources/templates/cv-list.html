@@ -14,7 +14,7 @@
 <main>
 
 
-    <section class="py-5 text-center container">
+    <section class="text-center container">
         <div class="row py-lg-5">
             <div class="col-lg-6 col-md-8 mx-auto">
                 <h1 class="fw-light" th:text="${userCredentials}"></h1>
@@ -28,49 +28,66 @@
     </section>
 
     <div class="album py-5 bg-light">
-        <div th:switch="${message.length()}">
-            <div th:case="0"></div>
-            <div th:case="*">
-                <h3 class="fw-light" th:text="${message}"></h3>
-            </div>
+
+        <div th:if="${message.length() >0 }" class="text-center container mb-3">
+            <h3 class="text-primary" th:text="${message}"></h3>
         </div>
+
         <div th:switch="${resumes.size()}" class="container">
             <div th:case="0" class="text-center">
-                <h3 class="fw-light" th:text="'Список ваших резюме пуст!'"></h3>
+                <h3 class="text-primary" th:text="'Список ваших резюме пуст!'"></h3>
             </div>
-            <div th:case="*" class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+            <div th:case="*" class="row row-cols-1 row-cols-lg-3 g-3">
                 <div th:each="resume : ${resumes}">
                     <div class="col">
-                        <div class="card shadow-sm">
+                        <div class="card shadow-sm cv-card">
+                            <div class="col-sm-10 mx-3 mt-3">
+                                <span th:if="${resume.published}" class="badge text-bg-success w-25 publishFlag">Опубликовано</span>
+                                <a th:if="${resume.published}" th:href="@{/public/{id}/(id=${resume.id})}"
+                                   class="badge text-bg-primary w-25 publishUrl">Ссылка</a>
+                                <span th:if="!${resume.published}" class="badge text-bg-warning w-25 publishFlag">Черновик</span>
+                                <img th:if="${resume.photo}"
+                                     th:src="@{/upload/profile/{photo}(photo=${resume.photo.name})}"
+                                     class="float-start d-block mx-md-auto bd-placeholder-img img-thumbnail img-fluid img-cv"
+                                     alt="Bootstrap Themes"
+                                     width="200" height="200" loading="lazy">
+                                <img th:if="!${resume.photo}" src="/images/noimage_photo.png"
+                                     class="float-start d-block mx-md-auto bd-placeholder-img img-thumbnail img-fluid img-cv"
+                                     alt="Bootstrap Themes"
+                                     width="200" height="200" loading="lazy">
+                                <div class="btn-group mt-3 mx-md-3 mt-md-0 mt-lg-3 mx-lg-0">
+                                    <input th:if="!${resume.published}" th:form="'publishFrom' + ${resume.id}"
+                                           type="submit"
+                                           class="btn btn-outline-success" value="Опубликовать">
+                                    <input th:if="${resume.published}" th:form="'publishFrom' + ${resume.id}"
+                                           type="submit"
+                                           class="btn btn-outline-warning" value="Скрыть">
+                                    <button type="button" class="btn btn-outline-info optionsDrop dropdown-toggle col-4"
+                                            data-bs-toggle="dropdown" aria-expanded="false">
+                                        Настройки
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" th:href="@{/cv/{id}/(id=${resume.id})}">Предпросмотр</a>
+                                        </li>
+                                        <li><a class="dropdown-item" th:href="@{/cv/edit/{id}/(id=${resume.id})}">Редактировать</a>
+                                        </li>
+                                        <li>
+                                            <hr class="dropdown-divider">
+                                        </li>
+                                        <li><a class="dropdown-item" th:href="@{/cv/delete/{id}/(id=${resume.id})}">Удалить</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
                             <div class="card-body">
-                                <span th:if="${resume.published}" class="badge text-bg-success">Опубликовано</span>
-                                <span th:if="!${resume.published}" class="badge text-bg-warning">Черновик</span>
-                                <div class="col-lg-4 m-3">
-                                    <img th:if="${resume.photo}" th:src="@{/upload/profile/{photo}(photo=${resume.photo.name})}"
-                                         class="float-start d-block mx-md-auto bd-placeholder-img img-thumbnail img-fluid"
-                                         alt="Bootstrap Themes"
-                                         width="200" height="200" loading="lazy">
-                                    <img th:if="!${resume.photo}" src="/images/noimage_photo.png"
-                                         class="float-start d-block mx-md-auto bd-placeholder-img img-thumbnail img-fluid"
-                                         alt="Bootstrap Themes"
-                                         width="200" height="200" loading="lazy">
-                                </div>
                                 <h3 class="fw-light" th:text="${resume.title}"></h3>
-                                <p class="card-text" th:text="${resume.commonInfo}"></p>
-                                <div class="d-flex justify-content-start">
-                                    <div class="btn-group-vertical">
-                                        <a class="btn btn-sm btn-outline-primary"
-                                           th:href="@{/cv/{id}/(id=${resume.id})}">Показать</a>
-                                        <a class="btn btn-sm btn-outline-warning"
-                                           th:href="@{/cv/edit/{id}/(id=${resume.id})}">Редактировать</a>
-                                        <a class="btn btn-sm btn-outline-danger"
-                                           th:href="@{/cv/delete/{id}/(id=${resume.id})}">Удалить</a>
-                                    </div>
-                                </div>
-                                <form class="mt-3" th:if="!${resume.published}" th:action="@{/cv/{id}/(id=${resume.id})}"
+                                <form th:id="'publishFrom' + ${resume.id}" class="mt-3 col-4"
+                                      th:action="@{/cv/{id}/(id=${resume.id})}"
                                       method="post">
-                                    <input type="hidden" name="published" value="true" id="published">
-                                    <input type="submit" class="btn btn-sm btn-success" value="Опубликовать">
+                                    <input th:if="!${resume.published}" type="hidden" name="published" value="true"
+                                           id="published">
+                                    <input th:if="${resume.published}" type="hidden" name="published" value="false"
+                                           id="published">
                                 </form>
                             </div>
                         </div>
@@ -80,10 +97,8 @@
         </div>
     </div>
 </main>
-<a th:href="@{/}">Назад</a>
 
 <div th:replace="~{footer}"></div>
-
 
 <script src="/js/bootstrap.bundle.min.js"></script>
 </body>

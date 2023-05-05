@@ -32,6 +32,9 @@ public class LoginController {
         return "register";
     }
 
+
+
+
     @ModelAttribute("userCredentials")
     public String populateUserCredentials() {
         String login = SecurityContextHolder.getContext().getAuthentication().getName();

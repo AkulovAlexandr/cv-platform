@@ -1,5 +1,8 @@
 package by.akulov.java.cvp.web;
 
+import by.akulov.java.cvp.exception.ForbiddenException;
+import by.akulov.java.cvp.exception.PageNotFoundException;
+import by.akulov.java.cvp.exception.ServerErrorException;
 import by.akulov.java.cvp.model.Photo;
 import by.akulov.java.cvp.model.PlatformUser;
 import by.akulov.java.cvp.model.resume.Resume;
@@ -37,22 +40,25 @@ public class ResumeController {
                 model.addAttribute("resume", resume);
                 return "cv";
             } else {
-                return "404";
+                throw new ForbiddenException();
             }
         }
-        return "404";
+        throw new PageNotFoundException();
     }
 
     @GetMapping("/cv/list/")
     public String getListOfResumes(Model model) {
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
         PlatformUser platformUser = userService.findUserByLogin(login);
-        ArrayList<Resume> resumes = new ArrayList<>(platformUser.getResumes());
-        model.addAttribute("resumes", resumes);
-        if (model.getAttribute("message") == null) {
-            model.addAttribute("message", "");
+        if (platformUser != null) {
+            ArrayList<Resume> resumes = new ArrayList<>(platformUser.getResumes());
+            model.addAttribute("resumes", resumes);
+            if (model.getAttribute("message") == null) {
+                model.addAttribute("message", "");
+            }
+            return "cv-list";
         }
-        return "cv-list";
+        throw new ForbiddenException();
     }
 
     @GetMapping("/cv/delete/{id}/")
@@ -66,9 +72,7 @@ public class ResumeController {
             model.addAttribute("resumes", user.getResumes());
             return "cv-list";
         }
-        model.addAttribute("resumes", user.getResumes());
-        model.addAttribute("message", "Нет доступа к запрашиваемому резюме!");
-        return "cv-list";
+        throw new ForbiddenException();
     }
 
 
@@ -92,10 +96,10 @@ public class ResumeController {
                     model.addAttribute("photo", resume.getPhoto() == null ? new Photo() : resume.getPhoto());
                     return "cv-edit";
                 } else {
-                    return "404";
+                    throw new ForbiddenException();
                 }
             }
-            return "404";
+            throw new PageNotFoundException();
         }
     }
 
@@ -126,14 +130,14 @@ public class ResumeController {
             if (resumePlatformUser.getLogin().equals(login)) {
                 resume.setPublished(published);
                 resumeService.save(resume);
-                model.addAttribute("message", "Резюме опубликовано!");
+                model.addAttribute("message", "Настройки публикации сохранены..");
                 model.addAttribute("resumes", resumePlatformUser.getResumes());
                 return "cv-list";
             } else {
-                return "404";
+                throw new PageNotFoundException();
             }
         }
-        return "404";
+        throw new ServerErrorException();
     }
 
 

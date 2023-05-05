@@ -41,7 +41,15 @@ public class CvPlatformApplication {
                 user.setSurname("Акулов");
                 userService.save(user);
 
-                for (int i = 0; i < 1; i++) {
+                PlatformUser user2 = new PlatformUser();
+                user2.setRole(String.valueOf(Roles.ROLE_ADMIN));
+                user2.setLogin("admin");
+                user2.setPassword(passwordEncoder.encode("admin"));
+                user2.setName("Тестовый");
+                user2.setSurname("Админ");
+                userService.save(user2);
+
+                for (int i = 0; i < 3; i++) {
                     Resume resume = new Resume();
                     resume.setPlatformUser(user);
 
@@ -141,8 +149,8 @@ public class CvPlatformApplication {
                     skills.add(secondSkill);
                     skills.add(thirdSkill);
 
-                    resume.setTitle("Automation-QA, JAVA-developer");
-                    resume.setCommonInfo("Это резюме создано для теста. Тут может быть множество текстов.");
+                    resume.setTitle("JAVA-developer");
+                    resume.setCommonInfo("Это резюме создано для теста. Тут может быть до 1000 символов.<br>Пару фактов обо мне:<br>1. Факт<br>2. Факт<br>3. Факт");
                     resume.setContacts(contacts);
                     resume.setSkills(skills);
                     resume.setJobs(jobs);

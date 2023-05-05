@@ -25,14 +25,15 @@ public class ResumeServiceImpl implements ResumeService {
 
     private final SkillRepository skillRepository;
 
-    @Autowired
-    private PhotoRepository photoRepository;
+    private final PhotoRepository photoRepository;
 
-    public ResumeServiceImpl(ResumeRepository resumeRepository, ExperienceRepository experienceRepository, ContactRepository contactRepository, SkillRepository skillRepository) {
+    @Autowired
+    public ResumeServiceImpl(ResumeRepository resumeRepository, ExperienceRepository experienceRepository, ContactRepository contactRepository, SkillRepository skillRepository, PhotoRepository photoRepository) {
         this.resumeRepository = resumeRepository;
         this.experienceRepository = experienceRepository;
         this.contactRepository = contactRepository;
         this.skillRepository = skillRepository;
+        this.photoRepository = photoRepository;
     }
 
     @Override
@@ -119,18 +120,17 @@ public class ResumeServiceImpl implements ResumeService {
 
     @Override
     @Transactional
-    public Resume update(Resume resume) {
+    public void update(Resume resume) {
         if (resume.getPhoto() != null) {
             photoRepository.save(resume.getPhoto());
         }
         skillRepository.deleteAllByResume_Id(resume.getId());
         contactRepository.deleteAllByResume_Id(resume.getId());
         experienceRepository.deleteAllByResume_Id(resume.getId());
-        Resume saved = resumeRepository.save(resume);
+        resumeRepository.save(resume);
         skillRepository.saveAll(resume.getSkills());
         contactRepository.saveAll(resume.getContacts());
         experienceRepository.saveAll(resume.getExperiences());
-        return saved;
     }
 
     @Override

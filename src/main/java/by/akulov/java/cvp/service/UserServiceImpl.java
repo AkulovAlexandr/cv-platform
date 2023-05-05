@@ -20,13 +20,13 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    @Autowired
     private UserRepository userRepository;
 
-    @Override
-    public PlatformUser getUserById(Long id) {
-        return userRepository.findUserById(id);
+    @Autowired
+    public UserServiceImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
+
 
     @Override
     public PlatformUser findUserByLogin(String login) {

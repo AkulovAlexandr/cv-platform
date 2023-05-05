@@ -1,6 +1,6 @@
 package by.akulov.java.cvp.repository;
 
-import by.akulov.java.cvp.model.resume.Resume;
+
 import by.akulov.java.cvp.model.resume.experience.Experience;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;

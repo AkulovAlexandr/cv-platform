@@ -1,5 +1,6 @@
 package by.akulov.java.cvp.web;
 
+import by.akulov.java.cvp.exception.PageNotFoundException;
 import by.akulov.java.cvp.model.PlatformUser;
 import by.akulov.java.cvp.model.resume.Resume;
 import by.akulov.java.cvp.service.ResumeService;
@@ -30,7 +31,6 @@ public class PublishCvController {
             model.addAttribute("isPublished", true);
             return "cv";
         }
-        model.addAttribute("hasError", true);
-        return "404";
+        throw new PageNotFoundException();
     }
 }

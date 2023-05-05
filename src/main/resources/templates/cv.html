@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -15,7 +15,7 @@
     <div id="invoice" class="col-xl-9 mt-4 mx-auto bg-light p-3 rounded-3">
 
         <div id="scrollspyHeading1" class="d-flex bg-white rounded-3 mb-5">
-            <div class="container col-xxl-8 px-4 py-5">
+            <div class="container col px-4 py-5">
                 <div class="row align-items-center g-5">
                     <div class="col-lg-4">
                         <img th:if="${resume.photo}" th:src="@{/upload/profile/{photo}(photo=${resume.photo.name})}"
@@ -31,10 +31,13 @@
                         <h1 class="display-5 fw-bold lh-1 mb-3"
                             th:text="${resumeOwner.name} + ' ' + ${resumeOwner.surname}"></h1>
                         <p class="lead" th:text="*{title}"></p>
-                        <p class="lead" th:text="*{commonInfo}"></p>
+                        <p class="lead" th:utext="*{commonInfo}"></p>
                         <div id="saveButtonBlock" class="d-grid gap-2 justify-content-md-start">
                             <button id="saveToPdf" type="button" class="btn btn-primary btn-lg px-4 me-md-2 hiding">
                                 Скачать в пдф
+                            </button>
+                            <button type="button" class="btn btn-secondary btn-lg px-4 me-md-2 hiding" onclick="print()">
+                                Печать
                             </button>
                         </div>
                     </div>
