@@ -12,5 +12,6 @@ public interface UserRepository extends CrudRepository<PlatformUser, Long> {
 
     Optional<PlatformUser> findFirstByLogin(String login);
 
+    boolean existsPlatformUserByLogin(String login);
 
 }

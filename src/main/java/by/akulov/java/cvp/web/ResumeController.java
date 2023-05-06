@@ -21,7 +21,6 @@ import java.util.*;
 public class ResumeController {
 
     private final ResumeService resumeService;
-
     private final UserService userService;
 
     public ResumeController(ResumeService resumeService, UserService userService) {

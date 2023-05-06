@@ -30,10 +30,12 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(auth -> auth
                         .antMatchers("/h2-console/**").permitAll()
-                        .antMatchers("/", "/images/**", "/js/**", "/css/**", "/upload/profile/**", "/public/**", "/register/**", "/error/**", "/favicon**").permitAll()
+                        .antMatchers("/", "/images/**", "/js/**", "/css/**", "/upload/profile/**", "/public/**", "/register/**", "/error/**", "/favicon**", "/login**").permitAll()
                         .antMatchers("/cv/", "/cv/**").hasAnyRole("USER", "ADMIN")
                 )
-                .formLogin().permitAll()
+                .formLogin()
+                .loginPage("/login")
+                .permitAll().defaultSuccessUrl("/")
                 .and()
                 .logout().permitAll()
                 .and()

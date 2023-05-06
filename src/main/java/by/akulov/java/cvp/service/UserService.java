@@ -7,5 +7,10 @@ public interface UserService extends UserDetailsService {
 
     PlatformUser findUserByLogin(String login);
 
+    boolean isExists(String login);
+
     void save(PlatformUser user);
+
+    String encodePassword(String password);
+
 }
