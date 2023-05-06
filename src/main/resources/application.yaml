@@ -14,6 +14,10 @@ spring:
     init:
       mode: always
 
+  servlet:
+    multipart:
+      max-file-size: 2MB
+
 server:
   servlet:
     context-path: /

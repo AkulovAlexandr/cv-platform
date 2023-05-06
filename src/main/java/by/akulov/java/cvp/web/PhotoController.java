@@ -5,24 +5,20 @@ import by.akulov.java.cvp.model.Photo;
 import by.akulov.java.cvp.model.resume.Resume;
 import by.akulov.java.cvp.repository.PhotoRepository;
 import by.akulov.java.cvp.service.ResumeService;
-import javax.servlet.ServletContext;
+import by.akulov.java.cvp.util.FileSaver;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.Date;
-import java.util.UUID;
+import java.util.Optional;
+
 
 @Controller
 @RequestMapping("/upload")
@@ -32,12 +28,10 @@ public class PhotoController {
     private final PhotoRepository photoRepository;
     private final ResumeService resumeService;
     public final String PROFILE_PHOTO_PATH;
-    public final String APP_CONTEXT_PATH;
 
     @Autowired
-    public PhotoController(@Value("${upload.profile-path}") String upload, ServletContext servletContext, PhotoRepository photoRepository, ResumeService resumeService) {
+    public PhotoController(@Value("${upload.profile-path}") String upload, PhotoRepository photoRepository, ResumeService resumeService) {
         PROFILE_PHOTO_PATH = upload;
-        APP_CONTEXT_PATH = servletContext.getContextPath();
         this.photoRepository = photoRepository;
         this.resumeService = resumeService;
     }
@@ -46,7 +40,7 @@ public class PhotoController {
     @GetMapping("/profile/{fileName}")
     @ResponseBody
     public HttpEntity<byte[]> getProfilePhoto(@PathVariable String fileName) throws IOException {
-        File file = new File(APP_CONTEXT_PATH);
+        File file = new File("");
         String fullPath = file.getCanonicalPath() + PROFILE_PHOTO_PATH + fileName;
         byte[] image = FileUtils.readFileToByteArray(new File(fullPath));
 
@@ -58,43 +52,27 @@ public class PhotoController {
     @PostMapping("/profile/")
     public String handleFileUpload(@RequestParam(name = "photo") MultipartFile multipartFile,
                                    @ModelAttribute Photo photo,
-                                   @RequestParam String resumeId,
-                                   Model model) throws IOException {
-        String userLogin = SecurityContextHolder.getContext().getAuthentication().getName();
+                                   @RequestParam String resumeId) {
         try {
-            if (multipartFile != null) {
-                InputStream inputStream = multipartFile.getInputStream();
-                byte[] buf = new byte[51200];
-                File file = new File(APP_CONTEXT_PATH);
-                UUID uuid = UUID.randomUUID();
-                String fileName = uuid + multipartFile.getName();
-                String fullPath = file.getCanonicalPath() + PROFILE_PHOTO_PATH + fileName;
-                FileOutputStream fileOutputStream = new FileOutputStream(fullPath);
-                int numRead;
-                while ((numRead = inputStream.read(buf)) >= 0) {
-                    fileOutputStream.write(buf, 0, numRead);
+            String fileName = FileSaver.saveFileTo(multipartFile, PROFILE_PHOTO_PATH);
+            if (photo.getId() != null) {
+                Optional<Photo> oldPhoto = photoRepository.findById(photo.getId());
+                if (oldPhoto.isPresent()) {
+                    oldPhoto.get().setName(fileName);
+                    photoRepository.save(oldPhoto.get());
                 }
-                inputStream.close();
-                fileOutputStream.close();
-
-                if (photo.getId() != null) {
-                    Photo oldPhoto = photoRepository.findById(photo.getId()).get();
-                    oldPhoto.setName(fileName);
-                    photoRepository.save(oldPhoto);
-                } else {
-                    photo.setName(fileName);
-                    photoRepository.save(photo);
-                    Resume resume = resumeService.findById(Long.parseLong(resumeId));
-                    resume.setPhoto(photo);
-                    resumeService.save(resume);
-                }
-
-
+            } else {
+                photo.setName(fileName);
+                photoRepository.save(photo);
+                Resume resume = resumeService.findById(Long.parseLong(resumeId));
+                resume.setPhoto(photo);
+                resumeService.save(resume);
+                return "redirect:/cv/list/";
             }
-        } catch (RuntimeException ex) {
+        } catch (RuntimeException | IOException ex) {
             throw new ServerErrorException();
         }
-        model.addAttribute("message", "Фото загружено");
-        return "redirect:/cv/edit/" + resumeId + "/";
+        return String.format("redirect:/cv/edit/%s/", resumeId);
     }
+
 }
