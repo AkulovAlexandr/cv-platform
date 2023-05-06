@@ -1,7 +1,7 @@
 package by.akulov.java.cvp.model.resume.contact;
 
 import by.akulov.java.cvp.model.resume.Resume;
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.Data;
 
 import java.util.Objects;

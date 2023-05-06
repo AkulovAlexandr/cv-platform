@@ -4,7 +4,7 @@ import by.akulov.java.cvp.model.Photo;
 import by.akulov.java.cvp.model.PlatformUser;
 import by.akulov.java.cvp.model.resume.contact.Contact;
 import by.akulov.java.cvp.model.resume.experience.Experience;
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.Where;
 

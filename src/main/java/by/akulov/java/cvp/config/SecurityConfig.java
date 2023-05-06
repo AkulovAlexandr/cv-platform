@@ -9,7 +9,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 
 @Configuration
@@ -30,9 +29,9 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**")).permitAll()
-                        .requestMatchers("/", "/images/**", "/js/**", "/css/**", "/upload/profile/**", "/public/**", "/register/**", "/error/**", "/favicon**").permitAll()
-                        .requestMatchers("/cv/", "/cv/**").hasAnyRole("USER", "ADMIN")
+                        .antMatchers("/h2-console/**").permitAll()
+                        .antMatchers("/", "/images/**", "/js/**", "/css/**", "/upload/profile/**", "/public/**", "/register/**", "/error/**", "/favicon**").permitAll()
+                        .antMatchers("/cv/", "/cv/**").hasAnyRole("USER", "ADMIN")
                 )
                 .formLogin().permitAll()
                 .and()
@@ -40,7 +39,7 @@ public class SecurityConfig {
                 .and()
                 .headers(headers -> headers.frameOptions().disable())
                 .csrf(csrf -> csrf
-                        .ignoringRequestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**")));
+                        .ignoringAntMatchers("/h2-console/**"));
 
         return http.build();
     }

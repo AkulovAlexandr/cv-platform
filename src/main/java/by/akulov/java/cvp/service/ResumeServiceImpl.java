@@ -6,13 +6,14 @@ import by.akulov.java.cvp.model.resume.contact.Contact;
 import by.akulov.java.cvp.model.resume.experience.Experience;
 import by.akulov.java.cvp.model.resume.experience.ExperienceType;
 import by.akulov.java.cvp.repository.*;
-import jakarta.transaction.Transactional;
+import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class ResumeServiceImpl implements ResumeService {
@@ -41,19 +42,19 @@ public class ResumeServiceImpl implements ResumeService {
 
         List<String> skillKeys = map.keySet().stream()
                 .filter(strings -> strings.matches(".*skill.*"))
-                .toList();
+                .collect(Collectors.toList());
 
         List<String> jobKeys = map.keySet().stream()
                 .filter(strings -> strings.matches(".*job.*"))
-                .toList();
+                .collect(Collectors.toList());
 
         List<String> educationKeys = map.keySet().stream()
                 .filter(strings -> strings.matches(".*edu.*"))
-                .toList();
+                .collect(Collectors.toList());
 
         List<String> contactKeys = map.keySet().stream()
                 .filter(strings -> strings.matches(".*contact.*"))
-                .toList();
+                .collect(Collectors.toList());
 
 
         List<Skill> skillList = new ArrayList<>();

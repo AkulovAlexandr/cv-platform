@@ -5,7 +5,7 @@ import by.akulov.java.cvp.model.Photo;
 import by.akulov.java.cvp.model.resume.Resume;
 import by.akulov.java.cvp.repository.PhotoRepository;
 import by.akulov.java.cvp.service.ResumeService;
-import jakarta.servlet.ServletContext;
+import javax.servlet.ServletContext;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

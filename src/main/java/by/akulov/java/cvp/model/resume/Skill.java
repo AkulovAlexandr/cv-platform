@@ -1,6 +1,6 @@
 package by.akulov.java.cvp.model.resume;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.Data;
 
 import java.util.Objects;
