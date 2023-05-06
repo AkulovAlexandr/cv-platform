@@ -277,12 +277,7 @@
 <script src="/js/element-injection.js"></script>
 <script>
     function preview() {
-        if (this.file[0].size > 2097152) {
-            alert("Разме файла превышает 2МБ!");
-            this.value = "";
-        } else {
-            frame.src = URL.createObjectURL(event.target.files[0]);
-        }
+        frame.src = URL.createObjectURL(event.target.files[0]);
     }
 </script>
 </body>
