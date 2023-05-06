@@ -14,7 +14,7 @@
 <main id="main-cv" class="d-flex flex-column" th:object="${resume}">
     <div id="invoice" class="col-xl-9 mt-4 mx-auto bg-light p-3 rounded-3">
 
-        <div id="scrollspyHeading1" class="d-flex bg-white rounded-3 mb-5">
+        <div id="scrollspyHeading1" class="d-flex bg-white rounded-3 mb-5 shadow-lg">
             <div class="container col px-4 py-5">
                 <div class="row align-items-center g-5">
                     <div class="col-lg-4">
@@ -46,7 +46,7 @@
         </div>
 
         <div th:switch="${resume.skills.size()}" id="scrollspyHeading2"
-             class="container-fluid mb-5 px-4 py-5 bg-white rounded-3">
+             class="container-fluid mb-5 px-4 py-5 bg-white rounded-3 shadow-lg">
             <h4 class="pb-2 mb-4 border-bottom">Навыки</h4>
             <div th:case="0"><h4 class="fs-2">Не указано</h4></div>
             <div th:case="*">
@@ -65,7 +65,7 @@
         </div>
 
         <div th:switch="${resume.jobs.size()}" id="scrollspyHeading3"
-             class="container-fluid mb-5 px-4 py-5 bg-white rounded-3">
+             class="container-fluid mb-5 px-4 py-5 bg-white rounded-3 shadow-lg">
             <h4 class="pb-2 mb-4 border-bottom">Опыт работы</h4>
             <div th:case="0"><h4 class="fs-2">Не указано</h4></div>
             <div th:case="*">
@@ -93,7 +93,7 @@
         </div>
 
         <div th:switch="${resume.educations.size()}" id="scrollspyHeading4"
-             class="container-fluid mb-5 px-4 py-5 bg-white rounded-3">
+             class="container-fluid mb-5 px-4 py-5 bg-white rounded-3 shadow-lg">
             <h4 class="pb-2 mb-4 border-bottom">Образование</h4>
             <div th:case="0"><h4 class="fs-2">Не указано</h4></div>
             <div th:case="*">
@@ -121,7 +121,7 @@
         </div>
 
         <div th:switch="${resume.contacts.size()}" id="scrollspyHeading5"
-             class="container-fluid mb-5 px-4 py-5 bg-white rounded-3">
+             class="container-fluid mb-5 px-4 py-5 bg-white rounded-3 shadow-lg">
             <h4 class="pb-2 mb-4 border-bottom">Контакты</h4>
             <div th:case="0"><h4 class="fs-2">Не указано</h4></div>
             <div th:case="*">

@@ -22,7 +22,7 @@
             <br>
             <div class="btn-group mt-3" role="group">
                 <a type="button" class="btn btn-secondary mb-5" data-bs-toggle="modal"
-                        data-bs-target="#exampleModal">
+                   data-bs-target="#exampleModal">
                     Загрузить новое фото
                 </a>
                 <a th:href="@{/cv/list/}" class="btn btn-danger" style="max-height: 38px;">Позже</a>
@@ -73,7 +73,12 @@
 <script src="/js/element-injection.js"></script>
 <script>
     function preview() {
-        frame.src = URL.createObjectURL(event.target.files[0]);
+        if (this.file[0].size > 2097152) {
+            alert("Разме файла превышает 2МБ!");
+            this.value = "";
+        } else {
+            frame.src = URL.createObjectURL(event.target.files[0]);
+        }
     }
 </script>
 </body>

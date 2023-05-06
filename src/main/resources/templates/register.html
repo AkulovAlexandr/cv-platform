@@ -12,10 +12,13 @@
 
 <div th:replace="~{header}"></div>
 
-<main class="col-sm-9 col-xxl-5 col-md-8 mt-4 mx-auto bg-light p-3 rounded-3" id="main">
-    <div class="py-5 text-start ">
+<main class="col-sm-9 col-xxl-5 col-md-8 mt-4 mx-auto bg-white p-3 p-sm-5 rounded-3 shadow-lg" id="main">
+    <img src="/images/logo2.png" width="200" height="200" class="d-flex mx-auto rounded-3" alt=""
+         loading="lazy">
+    <div class="py-5 text-start mt-3">
         <h1>Зарегистрируйтесь на платформе</h1>
-        <p class="lead">Заполните указанные ниже поля. Все поля обязательны.<br>Логин должен быть уникальным, а фамилия и
+        <p class="lead">Заполните указанные ниже поля. Все поля обязательны.<br>Логин должен быть уникальным, а фамилия
+            и
             имя - реальными (они будут отображены в Ваших резюме)</p>
     </div>
 
@@ -29,34 +32,11 @@
                     <input th:if="!${loginErr}" th:field="${user.login}" type="text" class="form-control" id="login"
                            placeholder="Логин для входа на платформу"
                            required>
-                    <input th:if="${loginErr}" th:field="${user.login}" type="text" class="form-control is-invalid" id="login"
+                    <input th:if="${loginErr}" th:field="${user.login}" type="text" class="form-control is-invalid"
+                           id="login"
                            placeholder="Логин для входа на платформу"
                            required>
                     <div th:if="${loginErr}" th:text="${loginErr}" class="invalid-feedback"></div>
-                </div>
-
-                <div class="col-12 mb-4">
-                    <label for="name" class="form-label h5">Имя</label>
-                    <hr class="m-0 mb-3">
-                    <input th:if="!${nameErr}" th:field="${user.name}" type="text" class="form-control" id="name"
-                           placeholder="Укажите реальное имя"
-                           required>
-                    <input th:if="${nameErr}" th:field="${user.name}" type="text" class="form-control is-invalid" id="name"
-                           placeholder="Укажите реальное имя"
-                           required>
-                    <div th:if="${nameErr}" th:text="${nameErr}" class="invalid-feedback"></div>
-                </div>
-
-                <div class="col-12 mb-4">
-                    <label for="surname" class="form-label h5">Фамилия</label>
-                    <hr class="m-0 mb-3">
-                    <input th:if="!${surnameErr}" th:field="${user.surname}" type="text" class="form-control" id="surname"
-                           placeholder="Укажите реальную фамилию"
-                           required>
-                    <input th:if="${surnameErr}" th:field="${user.surname}" type="text" class="form-control is-invalid" id="surname"
-                           placeholder="Укажите реальную фамилию"
-                           required>
-                    <div th:if="${surnameErr}" th:text="${surnameErr}" class="invalid-feedback"></div>
                 </div>
 
                 <div class="col-12 mb-4">
@@ -65,7 +45,8 @@
                     <input th:if="!${passErr}" th:field="${user.password}" type="password" class="form-control mb-2"
                            placeholder="Придумайте надежный пароль" id="password"
                            required>
-                    <input th:if="${passErr}" th:field="${user.password}" type="password" class="form-control mb-2 is-invalid"
+                    <input th:if="${passErr}" th:field="${user.password}" type="password"
+                           class="form-control mb-2 is-invalid"
                            placeholder="Придумайте надежный пароль" id="password"
                            required>
                     <div th:if="${passErr}" th:text="${passErr}" class="invalid-feedback mb-2"></div>
@@ -74,6 +55,32 @@
                            required>
                 </div>
 
+                <div class="col-12 mb-4">
+                    <label for="name" class="form-label h5">Имя</label>
+                    <hr class="m-0 mb-3">
+                    <input th:if="!${nameErr}" th:field="${user.name}" type="text" class="form-control" id="name"
+                           placeholder="Укажите реальное имя"
+                           required>
+                    <input th:if="${nameErr}" th:field="${user.name}" type="text" class="form-control is-invalid"
+                           id="name"
+                           placeholder="Укажите реальное имя"
+                           required>
+                    <div th:if="${nameErr}" th:text="${nameErr}" class="invalid-feedback"></div>
+                </div>
+
+                <div class="col-12 mb-4">
+                    <label for="surname" class="form-label h5">Фамилия</label>
+                    <hr class="m-0 mb-3">
+                    <input th:if="!${surnameErr}" th:field="${user.surname}" type="text" class="form-control"
+                           id="surname"
+                           placeholder="Укажите реальную фамилию"
+                           required>
+                    <input th:if="${surnameErr}" th:field="${user.surname}" type="text" class="form-control is-invalid"
+                           id="surname"
+                           placeholder="Укажите реальную фамилию"
+                           required>
+                    <div th:if="${surnameErr}" th:text="${surnameErr}" class="invalid-feedback"></div>
+                </div>
             </div>
             <button class="w-100 btn btn-primary btn-lg" type="submit">Зарегистрироваться</button>
         </form>

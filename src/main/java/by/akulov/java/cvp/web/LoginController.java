@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpSession;
+
 @Controller
 public class LoginController {
 
@@ -76,6 +78,12 @@ public class LoginController {
             return "login";
         }
         return "redirect:/";
+    }
+
+    @GetMapping("/logout")
+    public String logout(HttpSession session) {
+        session.invalidate();
+        return "redirect:/login?logout";
     }
 
 

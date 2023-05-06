@@ -73,7 +73,7 @@
         </div>
 
 
-        <div class="mb-3 bg-white rounded-3 p-3 p-sm-5">
+        <div class="mb-3 bg-white shadow-md rounded-3 p-3 p-sm-5">
             <h3 class="mb-4">Отредактируйте резюме</h3>
             <form th:action="@{/cv/edit/}" th:object="${resume}" method="post" class="needs-validation" novalidate>
                 <input th:if="${resume.photo}" type="hidden" th:field="${resume.photo.id}"
@@ -277,7 +277,12 @@
 <script src="/js/element-injection.js"></script>
 <script>
     function preview() {
-        frame.src = URL.createObjectURL(event.target.files[0]);
+        if (this.file[0].size > 2097152) {
+            alert("Разме файла превышает 2МБ!");
+            this.value = "";
+        } else {
+            frame.src = URL.createObjectURL(event.target.files[0]);
+        }
     }
 </script>
 </body>

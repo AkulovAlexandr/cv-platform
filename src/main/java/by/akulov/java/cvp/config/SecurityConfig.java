@@ -29,18 +29,23 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        .antMatchers("/h2-console/**").permitAll()
-                        .antMatchers("/", "/images/**", "/js/**", "/css/**", "/upload/profile/**", "/public/**", "/register/**", "/error/**", "/favicon**", "/login**").permitAll()
-                        .antMatchers("/cv/", "/cv/**").hasAnyRole("USER", "ADMIN")
+                        .antMatchers("/h2-console/**")
+                            .permitAll()
+                        .antMatchers("/", "/images/**", "/js/**", "/css/**", "/upload/profile/**", "/public/**", "/register/**", "/error/**", "/favicon**", "/login**")
+                            .permitAll()
+                        .antMatchers("/cv/", "/cv/**")
+                            .hasAnyRole("USER", "ADMIN")
                 )
                 .formLogin()
-                .loginPage("/login")
-                .permitAll().defaultSuccessUrl("/")
-                .and()
-                .logout().permitAll()
-                .and()
-                .headers(headers -> headers.frameOptions().disable())
-                .csrf(csrf -> csrf
+                    .loginPage("/login")
+                    .permitAll()
+                    .defaultSuccessUrl("/")
+                    .and()
+                .logout()
+                    .permitAll();
+
+                http.headers(headers -> headers.frameOptions().disable())
+                    .csrf(csrf -> csrf
                         .ignoringAntMatchers("/h2-console/**"));
 
         return http.build();
