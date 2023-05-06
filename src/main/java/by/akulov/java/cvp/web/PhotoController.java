@@ -22,6 +22,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
+import java.util.UUID;
 
 @Controller
 @RequestMapping("/upload")
@@ -65,8 +66,8 @@ public class PhotoController {
                 InputStream inputStream = multipartFile.getInputStream();
                 byte[] buf = new byte[51200];
                 File file = new File(APP_CONTEXT_PATH);
-                Date currentDate = new Date();
-                String fileName = currentDate + "_" + userLogin + "_" + multipartFile.getOriginalFilename();
+                UUID uuid = UUID.randomUUID();
+                String fileName = uuid + multipartFile.getName();
                 String fullPath = file.getCanonicalPath() + PROFILE_PHOTO_PATH + fileName;
                 FileOutputStream fileOutputStream = new FileOutputStream(fullPath);
                 int numRead;

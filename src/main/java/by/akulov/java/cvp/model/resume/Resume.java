@@ -28,15 +28,15 @@ public class Resume {
     private String commonInfo;
     @OneToOne(fetch = FetchType.EAGER)
     private Photo photo;
-    @OneToMany(mappedBy = "resume", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "resume")
     private Collection<Skill> skills;
-    @OneToMany(mappedBy = "resume", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "resume")
     @Where(clause = "type = 'JOB'")
     private Collection<Experience> jobs;
-    @OneToMany(mappedBy = "resume", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "resume")
     @Where(clause = "type = 'EDUCATION'")
     private Collection<Experience> educations;
-    @OneToMany(mappedBy = "resume", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "resume")
     private Collection<Contact> contacts;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
