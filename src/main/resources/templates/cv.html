@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -11,75 +11,78 @@
 
 <div th:replace="~{header}"></div>
 
-<nav id="navbar-cv" class="navbar navbar-expand-md d-flex justify-content-center py-3 sticky-top fixed-top">
-
-    <ul class="nav nav-pills">
-        <li class="nav-item"><a href="#scrollspyHeading1" class="nav-link" aria-current="page">Обо мне</a></li>
-        <li class="nav-item"><a href="#scrollspyHeading2" class="nav-link">Навыки</a></li>
-        <li class="nav-item"><a href="#scrollspyHeading3" class="nav-link">Опыт работы</a></li>
-        <li class="nav-item"><a href="#scrollspyHeading4" class="nav-link">Образование</a></li>
-        <li class="nav-item"><a href="#scrollspyHeading5" class="nav-link">Контакты</a></li>
-    </ul>
-    <a th:href="@{/cv/list/}">Назад</a>
-</nav>
-
 <main id="main-cv" class="d-flex flex-column" th:object="${resume}">
-    <div data-bs-spy="scroll" data-bs-target="#navbar-cv" data-bs-root-margin="0px 0px -40%"
-         data-bs-smooth-scroll="true" class="scrollspy bg-light p-3 rounded-2" tabindex="0">
+    <div id="invoice" class="col-xl-9 mt-4 mx-auto bg-light p-3 rounded-3">
 
-        <div id="scrollspyHeading1" class="d-flex bg-white border-3 mb-5">
-            <div class="container col-xxl-8 px-4 py-5">
-                <div class="row flex-lg-row-reverse align-items-center g-5 py-5">
-                    <div class="col-10 col-sm-8 col-lg-6">
-                        <img src="bootstrap-themes.png" class="d-block mx-lg-auto img-fluid" alt="Bootstrap Themes"
-                             width="700" height="500" loading="lazy">
+        <div id="scrollspyHeading1" class="d-flex bg-white rounded-3 mb-5 shadow-lg">
+            <div class="container col px-4 py-5">
+                <div class="row align-items-center g-5">
+                    <div class="col-lg-4">
+                        <img th:if="${resume.photo}" th:src="@{/upload/profile/{photo}(photo=${resume.photo.name})}"
+                             class="float-start d-block mx-md-auto bd-placeholder-img img-thumbnail img-fluid"
+                             alt="Bootstrap Themes"
+                             width="300" height="500" loading="lazy">
+                        <img th:if="!${resume.photo}" src="/images/noimage_photo.png"
+                             class="float-start d-block mx-md-auto bd-placeholder-img img-thumbnail img-fluid"
+                             alt="Bootstrap Themes"
+                             width="300" height="500" loading="lazy">
                     </div>
                     <div class="col-lg-6">
                         <h1 class="display-5 fw-bold lh-1 mb-3"
                             th:text="${resumeOwner.name} + ' ' + ${resumeOwner.surname}"></h1>
                         <p class="lead" th:text="*{title}"></p>
-                        <p class="lead" th:text="*{commonInfo}"></p>
-                        <div class="d-grid gap-2 d-md-flex justify-content-md-start">
-                            <button type="button" class="btn btn-primary btn-lg px-4 me-md-2">Primary</button>
-                            <button type="button" class="btn btn-outline-secondary btn-lg px-4">Default</button>
+                        <p class="lead" th:utext="*{commonInfo}"></p>
+                        <div id="saveButtonBlock" class="d-grid gap-2 justify-content-md-start">
+                            <button id="saveToPdf" type="button" class="btn btn-primary btn-lg px-4 me-md-2 hiding">
+                                Скачать в пдф
+                            </button>
+                            <button type="button" class="btn btn-secondary btn-lg px-4 me-md-2 hiding" onclick="print()">
+                                Печать
+                            </button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div id="scrollspyHeading2" class="container-fluid mb-5 px-4 py-5 bg-white border-3">
+        <div th:switch="${resume.skills.size()}" id="scrollspyHeading2"
+             class="container-fluid mb-5 px-4 py-5 bg-white rounded-3 shadow-lg">
             <h4 class="pb-2 mb-4 border-bottom">Навыки</h4>
-            <div th:each="skill : ${resume.skills}">
-                <div class="container-fluid mb-4">
-                    <span class="h6 mb-2" th:text="${skill.title}"></span>
-                    <div class="progress">
-                        <div class="progress-bar" role="progressbar" aria-label="Example with label"
-                             th:attr="aria-valuenow=${skill.percent}" th:style="'width:'+ ${skill.percent}+'%;'"
-                             aria-valuemin="0" aria-valuemax="100" th:text="${skill.percent} + '%'">
+            <div th:case="0"><h4 class="fs-2">Не указано</h4></div>
+            <div th:case="*">
+                <div th:each="skill : ${resume.skills}">
+                    <div class="container-fluid mb-4">
+                        <span class="h6 mb-2" th:text="${skill.title}"></span>
+                        <div class="progress">
+                            <div class="progress-bar" role="progressbar" aria-label="Example with label"
+                                 th:attr="aria-valuenow=${skill.percent}" th:style="'width:'+ ${skill.percent}+'%;'"
+                                 aria-valuemin="0" aria-valuemax="100" th:text="${skill.percent} + '%'">
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div id="scrollspyHeading3" class="container-fluid mb-5 px-4 py-5 bg-white border-3">
+        <div th:switch="${resume.jobs.size()}" id="scrollspyHeading3"
+             class="container-fluid mb-5 px-4 py-5 bg-white rounded-3 shadow-lg">
             <h4 class="pb-2 mb-4 border-bottom">Опыт работы</h4>
-            <div th:switch="${resume.jobs.size()}">
-                <div th:case="0"><h3 class="fs-2">Не указано</h3></div>
-                <div th:case="*">
-                    <div class="accordion" id="accordionPanelsStayOpen" th:each="job : ${resume.jobs}">
+            <div th:case="0"><h4 class="fs-2">Не указано</h4></div>
+            <div th:case="*">
+                <div th:each="job, counter : ${resume.jobs}">
+                    <div class="accordion mb-2" th:id="'accordionPanelsStayOpen' + ${counter.index}">
                         <div class="accordion-item">
-                            <h2 class="accordion-header" id="panelsStayOpen-headingOne">
+                            <h2 class="accordion-header" th:id="'panelsStayOpen-heading' + ${counter.index}">
                                 <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                                        data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true"
-                                        aria-controls="panelsStayOpen-collapseOne">
-                                    <span th:text="${job.title} + ' '"></span>
-                                    <span th:text="${job.startYear} + 'г. - ' + ${job.endYear} + 'г.'"></span>
+                                        th:data-bs-target="'#panelsStayOpen-collapse' + ${counter.index}"
+                                        aria-expanded="true"
+                                        th:aria-controls="'panelsStayOpen-heading' + ${counter.index}">
+                                    <span th:text="${job.startYear} + 'г. - ' + ${job.endYear} + 'г.' + ' - ' + ${job.title}"></span>
                                 </button>
                             </h2>
-                            <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show"
-                                 aria-labelledby="panelsStayOpen-headingOne">
+                            <div th:id="'panelsStayOpen-collapse' + ${counter.index}"
+                                 class="accordion-collapse collapse show"
+                                 th:aria-labelledby="'panelsStayOpen-heading' + ${counter.index}">
                                 <div class="accordion-body" th:text="${job.description}">
                                 </div>
                             </div>
@@ -88,75 +91,72 @@
                 </div>
             </div>
         </div>
-    </div>
 
-    <div id="scrollspyHeading4" class="container-fluid mb-5 px-4 py-5 bg-white border-3">
-        <h4 class="pb-2 mb-4 border-bottom">Образование</h4>
-        <div th:switch="${resume.educations.size()}">
-            <div th:case="0"><h3 class="fs-2">Не указано</h3></div>
+        <div th:switch="${resume.educations.size()}" id="scrollspyHeading4"
+             class="container-fluid mb-5 px-4 py-5 bg-white rounded-3 shadow-lg">
+            <h4 class="pb-2 mb-4 border-bottom">Образование</h4>
+            <div th:case="0"><h4 class="fs-2">Не указано</h4></div>
             <div th:case="*">
-                <div class="accordion" id="edu-accordionPanelsStayOpen" th:each="edu : ${resume.educations}">
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="edu-panelsStayOpen-headingOne">
-                            <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                                    data-bs-target="#edu-panelsStayOpen-collapseOne" aria-expanded="true"
-                                    aria-controls="edu-panelsStayOpen-collapseOne">
-                                <span th:text="${edu.title} + ' '"></span>
-                                <span th:text="${edu.startYear} + 'г. - ' + ${edu.endYear} + 'г.'"></span>
-                            </button>
-                        </h2>
-                        <div id="edu-panelsStayOpen-collapseOne" class="accordion-collapse collapse show"
-                             aria-labelledby="edu-panelsStayOpen-headingOne">
-                            <div class="accordion-body" th:text="${edu.description}">
+                <div th:each="edu, counter : ${resume.educations}">
+                    <div class="accordion mb-2" th:id="'edu-accordionPanelsStayOpen' + ${counter.index}">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" th:id="'edu-panelsStayOpen-heading' + ${counter.index}">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                        th:data-bs-target="'#edu-panelsStayOpen-collapse' + ${counter.index}"
+                                        aria-expanded="true"
+                                        th:aria-controls="'edu-panelsStayOpen-heading' + ${counter.index}">
+                                    <span th:text="${edu.startYear} + 'г. - ' + ${edu.endYear} + 'г.' + ' - ' + ${edu.title}"></span>
+                                </button>
+                            </h2>
+                            <div th:id="'edu-panelsStayOpen-collapse' + ${counter.index}"
+                                 class="accordion-collapse collapse show"
+                                 th:aria-labelledby="'edu-panelsStayOpen-heading' + ${counter.index}">
+                                <div class="accordion-body" th:text="${edu.description}">
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <div id="scrollspyHeading5" class="container-fluid mb-5 px-4 py-5 bg-white border-3">
-        <h4 class="pb-2 mb-4 border-bottom">Контакты</h4>
-        <div th:switch="${resume.contacts.size()}">
-            <div th:case="0"><h3 class="fs-2">Не указано</h3></div>
+        <div th:switch="${resume.contacts.size()}" id="scrollspyHeading5"
+             class="container-fluid mb-5 px-4 py-5 bg-white rounded-3 shadow-lg">
+            <h4 class="pb-2 mb-4 border-bottom">Контакты</h4>
+            <div th:case="0"><h4 class="fs-2">Не указано</h4></div>
             <div th:case="*">
-                <div th:each="contact : ${resume.contacts}" class="container px-4" id="featured-3">
+                <div th:each="contact : ${resume.contacts}">
                     <div th:switch="${contact.type}" class="row g-4 row-cols-1 row-cols-lg-3">
-                        <div th:case="'EMAIL'" class="feature col">
-                            <div class="feature-icon d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-2 mb-3">
-                                <svg class="bi" width="1em" height="1em">
-                                </svg>
-                            </div>
-                            <h3 class="fs-2">Почта</h3>
-                            <p th:text="${contact.data}"></p>
+                        <div th:case="'EMAIL'" class="feature col mb-4">
+                            <h5 class="lead">Почта</h5>
+                            <a class="btn btn-outline-primary" th:href="@{'mailto:'+ ${contact.data}}"
+                               th:text="${contact.data}">
+                            </a>
                         </div>
-                        <div th:case="'PHONE'" class="feature col">
-                            <div class="feature-icon d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-2 mb-3">
-                                <svg class="bi" width="1em" height="1em">
-                                    <use xlink:href="#people-circle"/>
-                                </svg>
-                            </div>
-                            <h3 class="fs-2">Телефон</h3>
-                            <p th:text="${contact.data}"></p>
+                        <div th:case="'PHONE'" class="feature col mb-4">
+                            <h5 class="lead">Телефон</h5>
+                            <a class="btn btn-outline-primary" th:href="@{'tel:'+ ${contact.data}}"
+                               th:text="${contact.data}">
+                            </a>
                         </div>
-                        <div th:case="'LINK'" class="feature col">
-                            <div class="feature-icon d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-2 mb-3">
-                                <svg class="bi" width="1em" height="1em">
-                                    <use xlink:href="#toggles2"/>
-                                </svg>
-                            </div>
-                            <h3 class="fs-2">Ссылки</h3>
-                            <a th:href="@{${contact.data}}" th:text="${contact.data}"></a>
+                        <div th:case="'LINK'" class="feature col mb-4">
+                            <h5 class="lead">Ссылка</h5>
+                            <a class="btn btn-outline-primary" th:href="@{contact.data}"
+                               th:text="${contact.data}">
+                            </a>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
     </div>
-
-
 </main>
+
+<div th:if="!${isPublished}" th:replace="~{footer}"></div>
+
 <script src="/js/bootstrap.bundle.min.js"></script>
+<script src="/js/saveToPdf.js"></script>
+<script src="/js/html2pdf.bundle.min.js"></script>
 </body>
 </html>

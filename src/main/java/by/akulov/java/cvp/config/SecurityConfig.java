@@ -1,19 +1,5 @@
 package by.akulov.java.cvp.config;
 
-import by.akulov.java.cvp.model.PlatformUser;
-import by.akulov.java.cvp.model.Roles;
-import by.akulov.java.cvp.model.resume.Resume;
-import by.akulov.java.cvp.model.resume.Skill;
-import by.akulov.java.cvp.model.resume.contact.Contact;
-import by.akulov.java.cvp.model.resume.contact.ContactType;
-import by.akulov.java.cvp.repository.ResumeRepository;
-import by.akulov.java.cvp.repository.UserRepository;
-import by.akulov.java.cvp.service.UserService;
-import jakarta.annotation.PostConstruct;
-import lombok.RequiredArgsConstructor;
-import org.hibernate.mapping.Set;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -23,10 +9,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-
-import java.util.ArrayList;
-import java.util.Collection;
 
 
 @Configuration
@@ -47,17 +29,24 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**")).permitAll()
-                        .requestMatchers("/", "/images/**", "/js/**", "/css/**").permitAll()
-                        .requestMatchers("/cv/", "/cv/**").hasAnyRole("USER", "ADMIN")
+                        .antMatchers("/h2-console/**")
+                            .permitAll()
+                        .antMatchers("/", "/images/**", "/js/**", "/css/**", "/upload/profile/**", "/public/**", "/register/**", "/error/**", "/favicon**", "/login**")
+                            .permitAll()
+                        .antMatchers("/cv/", "/cv/**")
+                            .hasAnyRole("USER", "ADMIN")
                 )
-                .formLogin().permitAll()
-                .and()
-                .logout().permitAll()
-                .and()
-                .headers(headers -> headers.frameOptions().disable())
-                .csrf(csrf -> csrf
-                        .ignoringRequestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**")));
+                .formLogin()
+                    .loginPage("/login")
+                    .permitAll()
+                    .defaultSuccessUrl("/")
+                    .and()
+                .logout()
+                    .permitAll();
+
+                http.headers(headers -> headers.frameOptions().disable())
+                    .csrf(csrf -> csrf
+                        .ignoringAntMatchers("/h2-console/**"));
 
         return http.build();
     }

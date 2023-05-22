@@ -1,6 +1,6 @@
 package by.akulov.java.cvp.model.resume;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.Data;
 
 import java.util.Objects;
@@ -15,7 +15,7 @@ public class Skill {
     private Long id;
     private String title;
     private Integer percent;
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name = "resume_id")
     private Resume resume;
 
@@ -39,7 +39,6 @@ public class Skill {
                 "id=" + id +
                 ", title='" + title + '\'' +
                 ", percent=" + percent +
-                ", resume_id=" + resume.getId() +
                 '}';
     }
 }

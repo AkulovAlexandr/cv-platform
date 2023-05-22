@@ -1,7 +1,7 @@
 package by.akulov.java.cvp.model.resume.contact;
 
 import by.akulov.java.cvp.model.resume.Resume;
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.Data;
 
 import java.util.Objects;
@@ -16,7 +16,7 @@ public class Contact {
     private Long id;
     private String data;
     private String type;
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name = "resume_id")
     private Resume resume;
 
@@ -25,12 +25,12 @@ public class Contact {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Contact contact = (Contact) o;
-        return Objects.equals(id, contact.id) && Objects.equals(data, contact.data) && type == contact.type && Objects.equals(resume, contact.resume);
+        return Objects.equals(id, contact.id) && Objects.equals(data, contact.data) && Objects.equals(type, contact.type);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, data, type, resume);
+        return Objects.hash(id, data, type);
     }
 
     @Override
@@ -39,7 +39,6 @@ public class Contact {
                 "id=" + id +
                 ", data='" + data + '\'' +
                 ", type='" + type + '\'' +
-                ", resume_id=" + resume.getId() +
                 '}';
     }
 }

@@ -10,6 +10,8 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -20,12 +22,18 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    @Autowired
     private UserRepository userRepository;
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     @Override
-    public PlatformUser getUserById(Long id) {
-        return userRepository.findUserById(id);
+    public String encodePassword(String password) {
+        return passwordEncoder.encode(password);
     }
 
     @Override
@@ -34,6 +42,14 @@ public class UserServiceImpl implements UserService {
                 .findFirstByLogin(login)
                 .orElseThrow(() ->
                         new UsernameNotFoundException("Пользователь с именем \"" + login + "\" - не найден"));
+    }
+
+    @Override
+    public boolean isExists(String login) {
+        if (login == null) {
+            return false;
+        }
+        return userRepository.existsPlatformUserByLogin(login);
     }
 
     @Override

@@ -3,95 +3,84 @@ package by.akulov.java.cvp.service;
 import by.akulov.java.cvp.model.resume.Resume;
 import by.akulov.java.cvp.model.resume.Skill;
 import by.akulov.java.cvp.model.resume.contact.Contact;
-import by.akulov.java.cvp.model.resume.experience.Education;
 import by.akulov.java.cvp.model.resume.experience.Experience;
 import by.akulov.java.cvp.model.resume.experience.ExperienceType;
-import by.akulov.java.cvp.model.resume.experience.Job;
-import by.akulov.java.cvp.repository.ContactRepository;
-import by.akulov.java.cvp.repository.ExperienceRepository;
-import by.akulov.java.cvp.repository.ResumeRepository;
-import by.akulov.java.cvp.repository.SkillRepository;
-import jakarta.transaction.Transactional;
-import org.apache.tomcat.Jar;
+import by.akulov.java.cvp.repository.*;
+import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class ResumeServiceImpl implements ResumeService {
 
-    @Autowired
-    private ResumeRepository resumeRepository;
+    private final ResumeRepository resumeRepository;
+
+    private final ExperienceRepository experienceRepository;
+
+    private final ContactRepository contactRepository;
+
+    private final SkillRepository skillRepository;
+
+    private final PhotoRepository photoRepository;
 
     @Autowired
-    private ContactRepository contactRepository;
-    @Autowired
-    private SkillRepository skillRepository;
-    @Autowired
-    private ExperienceRepository experienceRepository;
+    public ResumeServiceImpl(ResumeRepository resumeRepository, ExperienceRepository experienceRepository, ContactRepository contactRepository, SkillRepository skillRepository, PhotoRepository photoRepository) {
+        this.resumeRepository = resumeRepository;
+        this.experienceRepository = experienceRepository;
+        this.contactRepository = contactRepository;
+        this.skillRepository = skillRepository;
+        this.photoRepository = photoRepository;
+    }
 
     @Override
     public Resume parametersMappingToResume(Map<String, String[]> map, Resume resume) {
 
-        List<Skill> skillList = new ArrayList<>();
-        List<Experience> jobsList = new ArrayList<>();
-        List<Experience> educationsList = new ArrayList<>();
-        List<Contact> contactList = new ArrayList<>();
-
         List<String> skillKeys = map.keySet().stream()
                 .filter(strings -> strings.matches(".*skill.*"))
-                .toList();
+                .collect(Collectors.toList());
 
         List<String> jobKeys = map.keySet().stream()
                 .filter(strings -> strings.matches(".*job.*"))
-                .toList();
+                .collect(Collectors.toList());
 
         List<String> educationKeys = map.keySet().stream()
                 .filter(strings -> strings.matches(".*edu.*"))
-                .toList();
+                .collect(Collectors.toList());
 
         List<String> contactKeys = map.keySet().stream()
                 .filter(strings -> strings.matches(".*contact.*"))
-                .toList();
+                .collect(Collectors.toList());
 
-        for (int i = 1; i < skillKeys.size(); i += 2) {
+
+        List<Skill> skillList = new ArrayList<>();
+        for (int i = 1; i < skillKeys.size(); i += 3) {
             Skill skill = new Skill();
-            skill.setTitle(map.get(skillKeys.get(i - 1))[0]);
-            skill.setPercent(Integer.valueOf(map.get(skillKeys.get(i))[0]));
+            String id = map.get(skillKeys.get(i - 1))[0];
+            skill.setId(id.isEmpty() ? null : Long.parseLong(id));
+            skill.setTitle(map.get(skillKeys.get(i))[0]);
+            skill.setPercent(Integer.parseInt(map.get(skillKeys.get(i + 1))[0]));
             skill.setResume(resume);
             skillList.add(skill);
         }
 
-        for (int i = 1; i < jobKeys.size(); i += 4) {
-            Experience job = new Job();
-            job.setTitle(map.get(jobKeys.get(i - 1))[0]);
-            job.setStartYear(Integer.valueOf(map.get(jobKeys.get(i))[0]));
-            job.setEndYear(Integer.valueOf(map.get(jobKeys.get(i + 1))[0]));
-            job.setDescription(map.get(jobKeys.get(i + 2))[0]);
-            job.setResume(resume);
-            jobsList.add(job);
-        }
-
-        for (int i = 1; i < educationKeys.size(); i += 4) {
-            Experience edu = new Education();
-            edu.setTitle(map.get(educationKeys.get(i - 1))[0]);
-            edu.setStartYear(Integer.valueOf(map.get(educationKeys.get(i))[0]));
-            edu.setEndYear(Integer.valueOf(map.get(educationKeys.get(i + 1))[0]));
-            edu.setDescription(map.get(educationKeys.get(i + 2))[0]);
-            edu.setResume(resume);
-            educationsList.add(edu);
-        }
-
-        for (int i = 1; i < contactKeys.size(); i += 2) {
+        List<Contact> contactList = new ArrayList<>();
+        for (int i = 1; i < contactKeys.size(); i += 3) {
             Contact contact = new Contact();
-            contact.setData(map.get(contactKeys.get(i - 1))[0]);
-            contact.setType(map.get(contactKeys.get(i))[0]);
+            String id = map.get(contactKeys.get(i - 1))[0];
+            contact.setId(id.isEmpty() ? null : Long.parseLong(id));
+            contact.setData(map.get(contactKeys.get(i))[0]);
+            contact.setType(map.get(contactKeys.get(i + 1))[0]);
             contact.setResume(resume);
             contactList.add(contact);
         }
+
+        List<Experience> jobsList = createExperiences(map, jobKeys, resume, ExperienceType.JOB);
+        List<Experience> educationsList = createExperiences(map, educationKeys, resume, ExperienceType.EDUCATION);
 
         resume.setSkills(skillList);
         resume.setContacts(contactList);
@@ -101,14 +90,48 @@ public class ResumeServiceImpl implements ResumeService {
     }
 
 
-    @Override
-    public Resume save(Resume resume) {
-        return resumeRepository.save(resume);
+    private List<Experience> createExperiences(Map<String, String[]> map, List<String> keys, Resume resume, ExperienceType type) {
+        List<Experience> experiences = new ArrayList<>();
+        for (int i = 1; i < keys.size(); i += 5) {
+            Experience exp = new Experience();
+            String id = map.get(keys.get(i - 1))[0];
+            exp.setId(id.isEmpty() ? null : Long.parseLong(id));
+            exp.setTitle(map.get(keys.get(i))[0]);
+            exp.setStartYear(Integer.parseInt(map.get(keys.get(i + 1))[0]));
+            exp.setEndYear(Integer.parseInt(map.get(keys.get(i + 2))[0]));
+            exp.setDescription(map.get(keys.get(i + 3))[0]);
+            exp.setType(type.name());
+            exp.setResume(resume);
+            experiences.add(exp);
+        }
+        return experiences;
     }
 
     @Override
-    public ArrayList<Resume> findAllByUserId(Long id) {
-        return resumeRepository.findAllByPlatformUser_id(id);
+    public Resume save(Resume resume) {
+        if (resume.getPhoto() != null) {
+            photoRepository.save(resume.getPhoto());
+        }
+        Resume saved = resumeRepository.save(resume);
+        skillRepository.saveAll(resume.getSkills());
+        contactRepository.saveAll(resume.getContacts());
+        experienceRepository.saveAll(resume.getExperiences());
+        return saved;
+    }
+
+    @Override
+    @Transactional
+    public void update(Resume resume) {
+        if (resume.getPhoto() != null) {
+            photoRepository.save(resume.getPhoto());
+        }
+        skillRepository.deleteAllByResume_Id(resume.getId());
+        contactRepository.deleteAllByResume_Id(resume.getId());
+        experienceRepository.deleteAllByResume_Id(resume.getId());
+        resumeRepository.save(resume);
+        skillRepository.saveAll(resume.getSkills());
+        contactRepository.saveAll(resume.getContacts());
+        experienceRepository.saveAll(resume.getExperiences());
     }
 
     @Override
@@ -117,11 +140,10 @@ public class ResumeServiceImpl implements ResumeService {
     }
 
     @Override
-    public void deleteResumeById(Long id) {
-        Resume resume = resumeRepository.findFirstById(id);
-        contactRepository.deleteAllByResume_id(id);
-        skillRepository.deleteAllByResume_id(id);
-        experienceRepository.deleteAllByResume_id(id);
+    public void deleteResume(Resume resume) {
+        skillRepository.deleteAll(resume.getSkills());
+        experienceRepository.deleteAll(resume.getExperiences());
+        contactRepository.deleteAll(resume.getContacts());
         resumeRepository.delete(resume);
     }
 

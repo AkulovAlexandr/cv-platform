@@ -1,11 +1,9 @@
-#navbar-cv {
-    background-color: white;
-    margin-bottom: 10px;
-}
-
-#main-cv {
-    max-width: 80%;
-    margin: auto;
+#userCredentials::first-letter {
+    background-color: #0d6efd;
+    border-radius: 100%;
+    color: white;
+    font-size: 25px;
+    padding: 5px 14px;
 }
 
 #cv-edit-block {
@@ -25,15 +23,18 @@
 body {
     font-family: Calibri, serif;
     background-color: #f4f4f4;
+}
 
+#nav:hover {
+    cursor: pointer;
 }
 
 #nav-header {
-    background-color:#0d6efd ;
-    font-size: 20px;
+    background-color: #0d6efd;
+    font-size: 23px;
 }
 
-#nav-header li {
+#nav-header li, #navbar-cv li {
     font-weight: 600;
     font-variant-caps: all-petite-caps;
 }
@@ -54,11 +55,13 @@ body {
 #nav-userName ul li a {
     font-family: Calibri, serif;
     font-weight: bold;
+    font-size: 20px;
 }
 
 #nav-userName ul li a:active {
     background-color: var(--bs-dropdown-link-hover-bg);
 }
+
 
 #nav-exit-btn {
     font-weight: 600;
@@ -66,7 +69,7 @@ body {
 
 #main-product {
     max-width: 600px;
-    background-color: rgba(0,0,0, 0);
+    background-color: rgba(0, 0, 0, 0);
 }
 
 #main-demo-img img {
@@ -78,4 +81,87 @@ body {
 
 #main-carousel {
     width: 860px;
+}
+
+#errorContainer {
+    height: 25em;
+    position: relative;
+}
+
+#errorBlock {
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+#errorBlock h1 {
+    font-weight: 600;
+    font-variant-caps: all-petite-caps;
+    font-size: 45px;
+    color: #6c757d;
+}
+
+#errorBlock a {
+    font-weight: 600;
+    font-variant-caps: all-petite-caps;
+    font-size: 25px;
+    width: 100%;
+}
+
+.lightedText {
+    background-color: rgba(25,25,25,0.7);
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.publishFlag {
+    min-width: 120px;
+    max-width: 125px;
+    font-size: 16px;
+    top: 25px;
+    left: 27px;
+    position: absolute;
+}
+.publishUrl {
+    min-width: 120px;
+    max-width: 125px;
+    font-size: 16px;
+    top: 55px;
+    left: 27px;
+    position: absolute;
+}
+
+
+.optionsDrop{
+    min-width: 130px;
+}
+
+.img-cv{
+    min-height: 200px;
+    max-height: 200px;
+    min-width: 200px;
+}
+
+.loginForm {
+    max-width: 550px;
+}
+
+.cv-card {
+    max-height: 390px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.cv-editable-block {
+    background-color: #f8f9fa;
+}
+
+#commonInfo {
+    height: 200px;
+}
+
+.bg-main {
+    background-color: #0d6efd;
 }

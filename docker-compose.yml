@@ -1,7 +1,8 @@
 version: '3.3'
 
 services:
-  mysql-db:
+
+  db:
     image: mysql:latest
     container_name: cv-platform-db
     ports:
@@ -11,3 +12,16 @@ services:
       MYSQL_USER: dev_main
       MYSQL_PASSWORD: 1q2w3e4r
       MYSQL_ROOT_HOST: '%'
+
+  java:
+    build:
+      context: .
+    container_name: cv-platform-java
+    depends_on:
+      - db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/cv_platform
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=1q2w3e4r
+    ports:
+      - "8080:8080"

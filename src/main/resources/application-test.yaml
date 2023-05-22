@@ -1,0 +1,9 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:cv_platform
+    username: root
+    password: 1111
+
+  h2:
+    console:
+      enabled: true
